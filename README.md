@@ -155,11 +155,14 @@ self-evolving-agent/
 │   ├── LEARNING_AGENDA.md
 │   ├── LEARNINGS.md
 │   └── TRAINING_UNITS.md
+├── evals/
+│   └── evals.json
 ├── demos/
 │   ├── demo-1-diagnosis.md
 │   ├── demo-2-training-loop.md
 │   ├── demo-3-promotion-and-transfer.md
-│   └── demo-4-agenda-review.md
+│   ├── demo-4-agenda-review.md
+│   └── demo-5-pre-task-risk-diagnosis.md
 ├── hooks/
 │   └── openclaw/
 │       ├── HOOK.md

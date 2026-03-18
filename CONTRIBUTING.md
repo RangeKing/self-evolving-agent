@@ -9,6 +9,10 @@ Thanks for contributing to `self-evolving-agent`.
 - Preserve the memory layer while strengthening capability evolution.
 - Treat benchmark quality as part of the product, not as an afterthought.
 
+## Branch Convention
+
+The default branch is `main`. Please branch from `main` and target `main` in pull requests.
+
 ## Development Setup
 
 ```bash

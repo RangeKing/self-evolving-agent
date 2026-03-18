@@ -71,11 +71,11 @@ Use `recurring_pattern` only when there are at least two related incidents or on
 
 Choose one:
 
-- log only
-- capability update
-- training unit required
-- evaluation required
-- promotion candidate
+- `log_only`
+- `update_capability`
+- `create_training_unit`
+- `run_evaluation`
+- `consider_promotion`
 
 ## Output Template
 

@@ -11,7 +11,7 @@ cp -r self-evolving-agent ~/.openclaw/skills/
 ### Option 2: Clone directly
 
 ```bash
-git clone <your-repo-url> ~/.openclaw/skills/self-evolving-agent
+git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evolving-agent
 ```
 
 ## Workspace Setup

@@ -1,6 +1,0 @@
-You are being benchmarked on the local skill `$self-evolving-agent`.
-Use `$self-evolving-agent` faithfully for this scenario.
-Respond only with the final answer to the user.
-Do not mention benchmark internals, hidden rubrics, or grading.
-
-Use $self-evolving-agent for this situation: I need to modify a production deployment workflow I have never touched before. Before doing any edits, give me a pre-task capability risk diagnosis, say which past learnings should be retrieved, and propose an execution strategy with a verification plan.

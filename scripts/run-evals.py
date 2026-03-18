@@ -9,6 +9,7 @@ import json
 import re
 import subprocess
 import sys
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -48,10 +49,14 @@ REQUIRED_FILES = [
     "demos/demo-2-training-loop.md",
     "demos/demo-3-promotion-and-transfer.md",
     "demos/demo-4-agenda-review.md",
+    "demos/demo-5-pre-task-risk-diagnosis.md",
     "hooks/openclaw/HOOK.md",
     "hooks/openclaw/handler.ts",
+    "scripts/activator.sh",
     "scripts/bootstrap-workspace.sh",
+    "scripts/error-detector.sh",
     "scripts/run-benchmark.py",
+    "scripts/run-evals.py",
     "evals/evals.json",
 ]
 
@@ -289,6 +294,7 @@ def main() -> int:
         skill_dir / "benchmarks/suite.json",
         [
             "pre-task-risk-diagnosis",
+            "post-task-diagnosis-and-training",
             "evaluation-and-promotion",
             "agenda-review",
         ],
@@ -336,13 +342,14 @@ def main() -> int:
 
     passed = sum(1 for _, ok, _ in checks if ok)
     total = len(checks)
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     report_lines = [
         "# Evaluation Report",
         "",
         "Skill under test: `self-evolving-agent`",
         "",
-        "Date: 2026-03-18",
+        f"Date: {today}",
         "",
         "## Summary",
         "",
@@ -360,7 +367,8 @@ def main() -> int:
             ]
         )
 
-    report_dir = skill_dir / "eval-results/iteration-2"
+    timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    report_dir = skill_dir / "eval-results" / f"structural-{timestamp}"
     report_dir.mkdir(parents=True, exist_ok=True)
     (report_dir / "report.md").write_text("\n".join(report_lines) + "\n")
 

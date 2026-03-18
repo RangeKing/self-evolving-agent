@@ -16,7 +16,7 @@ I started implementing all three outputs directly.
 You missed that CSV requires flattening nested fields and Markdown needs grouped sections. Please step back and plan first.
 
 **Agent**
-You're right. This is the second time I started coding before defining output contracts and checkpoints. This looks like a planning and execution-discipline weakness, not just a rushed iteration.
+You're right. This is the second time I started coding before defining output contracts and checkpoints. This looks like a planning and execution discipline weakness, not just a rushed iteration.
 
 ## Skill Output
 

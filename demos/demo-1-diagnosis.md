@@ -69,3 +69,15 @@ Plausible change to an operational interface without direct validation.
 If the interface specification or tests explicitly permit aliases, normalization may be safe.
 ```
 
+```markdown
+## Capability Update
+
+**Capability**: verification
+**Previous Level**: L2 assisted
+**Current Level**: L2 assisted (no upgrade; evidence supports staying)
+**Assessment Status**: calibrated
+**Evidence Added**: Skipped tool-contract validation on a high-consequence deploy refactor; user corrected.
+**Failure Mode Added**: Normalizes CLI flags by semantic guessing instead of checking accepted values.
+**Next Training Focus**: Verify operational interfaces against accepted parameters before committing changes.
+```
+

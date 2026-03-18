@@ -33,7 +33,12 @@ class ExecResult:
 
 def load_suite(skill_dir: Path) -> tuple[dict, list[Scenario]]:
     suite_path = skill_dir / "benchmarks/suite.json"
-    suite = json.loads(suite_path.read_text())
+    if not suite_path.exists():
+        raise SystemExit(f"Suite file not found: {suite_path}")
+    try:
+        suite = json.loads(suite_path.read_text())
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON in {suite_path}: {exc}") from exc
     scenarios = [Scenario(**scenario) for scenario in suite["scenarios"]]
     return suite, scenarios
 
@@ -156,7 +161,9 @@ def build_judge_prompt(skill_name: str, scenario: Scenario, candidate_output: st
 
 
 def score_judgment(judgment: dict, policy: dict) -> tuple[bool, float, list[str]]:
-    criteria = judgment["criteria"]
+    criteria = judgment.get("criteria", [])
+    if not criteria:
+        return False, 0.0, ["no-criteria-in-judgment"]
     total = sum(item["score"] for item in criteria)
     max_total = max(len(criteria) * 2, 1)
     ratio = total / max_total
@@ -248,6 +255,8 @@ def main() -> int:
 
     results: list[dict] = []
     schema_path = skill_dir / "benchmarks/schemas/judge-output.schema.json"
+    if not schema_path.exists():
+        print(f"Warning: judge output schema not found at {schema_path}", file=sys.stderr)
 
     try:
         for scenario in scenarios:
@@ -290,9 +299,13 @@ def main() -> int:
                     output_schema=schema_path,
                 )
 
-                judgment = (
-                    json.loads(judge_output_path.read_text()) if judge_output_path.exists() else {}
-                )
+                if judge_output_path.exists():
+                    try:
+                        judgment = json.loads(judge_output_path.read_text())
+                    except json.JSONDecodeError:
+                        judgment = {}
+                else:
+                    judgment = {}
                 passed, ratio, blocking = score_judgment(judgment, suite["judge_policy"])
             else:
                 judgment = {

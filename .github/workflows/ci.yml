@@ -23,9 +23,7 @@ jobs:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install pyyaml
+        run: python -m pip install --upgrade pip
 
       - name: Run structural validation
         run: python3 scripts/run-evals.py .

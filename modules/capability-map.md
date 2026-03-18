@@ -90,7 +90,7 @@ Do not change levels after every minor task. Prefer updating evidence, failure m
 **Level**: L1 aware | L2 assisted | L3 reliable | L4 adaptive | L5 transferable
 **Assessment Status**: provisional | calibrated
 **Confidence**: low | medium | high
-**Last Reviewed**: YYYY-MM-DD
+**Last Reviewed**: ISO-8601 timestamp
 
 ### Current Strength
 Short description of what the agent can reliably do now.

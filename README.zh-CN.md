@@ -11,7 +11,7 @@
 [![Model-in-the-Loop Benchmark](https://img.shields.io/badge/Benchmark-Model--in--the--Loop-7C3AED?style=flat-square)](./benchmarks/suite.json)
 [![Goal-Driven Learning](https://img.shields.io/badge/Agent-Goal--Driven%20Learning-0F766E?style=flat-square)](./system/coordinator.md)
 
-🧠 self-improving agent 只会记录错误。
+🧠 self-improving agents 只会记录错误。
 
 `self-evolving-agent` 是一个面向 OpenClaw 的 skill，它把被动式自我改进升级为完整的能力进化闭环：诊断能力缺口、设定学习优先级、生成训练单元、评估进步、验证迁移，最后才把真正有效的策略提升为长期行为。
 
@@ -78,7 +78,7 @@ flowchart TD
     H --> I["更新评估状态"]
     I --> J["Promotion 决策"]
 
-    K["Learning Agenda Review"] --> B
+    K["学习议程审查"] --> B
     K --> G
     H --> K
     I --> K
@@ -88,16 +88,16 @@ flowchart TD
 
 每个有意义的 cycle 都运行以下流程：
 
-1. classify task
-2. retrieve relevant learnings and capabilities
-3. pre-task risk diagnosis
-4. choose execution strategy
-5. perform task
-6. reflect after completion
-7. update capability map
-8. generate or revise training
-9. evaluate learning progress
-10. promote only validated strategies
+1. 分类任务（novelty / consequence / horizon）
+2. 检索相关 learnings 与 capabilities
+3. 执行任务前风险诊断
+4. 选择执行策略
+5. 执行任务
+6. 任务后反思
+7. 更新能力地图
+8. 生成或修订训练单元
+9. 评估学习进度
+10. 仅 promote 经过验证的策略
 
 在任务闭环之外，还会在需要时运行 **learning agenda review**，动态调整训练优先级。
 
@@ -157,11 +157,14 @@ self-evolving-agent/
 │   ├── LEARNING_AGENDA.md
 │   ├── LEARNINGS.md
 │   └── TRAINING_UNITS.md
+├── evals/
+│   └── evals.json
 ├── demos/
 │   ├── demo-1-diagnosis.md
 │   ├── demo-2-training-loop.md
 │   ├── demo-3-promotion-and-transfer.md
-│   └── demo-4-agenda-review.md
+│   ├── demo-4-agenda-review.md
+│   └── demo-5-pre-task-risk-diagnosis.md
 ├── hooks/
 │   └── openclaw/
 │       ├── HOOK.md
@@ -191,14 +194,14 @@ python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-
 
 更完整的安装说明见 [install.md](./install.md)。
 
-## 🤝 项目治理
+## 🤝 项目健康
 
 - 贡献指南：[CONTRIBUTING.md](./CONTRIBUTING.md)
 - 变更记录：[CHANGELOG.md](./CHANGELOG.md)
 - 安全策略：[SECURITY.md](./SECURITY.md)
 - 开源许可证：[MIT](./LICENSE)
 
-## 🧪 Benchmark
+## 🧪 Benchmarking
 
 仓库里提供两类评测：
 

@@ -198,7 +198,7 @@ Create a training unit if any condition is true:
 - strategy was understood but not executable under pressure
 - the agent compensated through luck or user rescue
 
-If the new unit changes what should be trained now, run `modules/learning-agenda.md`.
+If the new unit changes what should be trained now, follow the protocol in `modules/learning-agenda.md`.
 
 ### Step 9: Evaluate progress
 
@@ -236,14 +236,14 @@ Use these unless a project-specific extension is justified.
 
 Diagnose failures using one or more of:
 
-- knowledge gap
-- decomposition weakness
-- verification weakness
-- tool-use weakness
-- communication weakness
-- memory retrieval weakness
-- execution discipline weakness
-- transfer weakness
+- `knowledge_gap`
+- `decomposition_weakness`
+- `verification_weakness`
+- `tool_use_weakness`
+- `communication_weakness`
+- `memory_retrieval_weakness`
+- `execution_discipline_weakness`
+- `transfer_weakness`
 
 ## Evidence Standard
 
@@ -270,9 +270,9 @@ Do not:
 
 For each meaningful cycle, produce:
 
-0. `Agenda Decision` if a review trigger fired
-1. `Task Diagnosis`
-2. `Capability Update`
-3. `Training Decision`
-4. `Evaluation State`
-5. `Promotion Decision`
+1. `Agenda Decision` (when a review trigger fired)
+2. `Task Diagnosis`
+3. `Capability Update`
+4. `Training Decision`
+5. `Evaluation State`
+6. `Promotion Decision`

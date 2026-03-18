@@ -35,7 +35,7 @@ Planning still matters, but the evidence suggests planning quality degrades main
    - Why now: still the highest-cost failure surface on unfamiliar work.
    - Current evidence: checks are more explicit, but transfer is not yet fully stable.
    - Exit criteria: one more successful transfer case without user correction.
-   - Linked unit: TRN-20260314-002
+   - Linked unit: TRN-20260315-001
 
 2. execution discipline
    - Why now: known workflows still collapse under momentum.

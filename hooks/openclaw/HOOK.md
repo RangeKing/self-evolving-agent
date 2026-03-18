@@ -13,7 +13,11 @@ This hook reminds the agent to think in capability-evolution terms, not only in 
 - inspect the active learning agenda
 - retrieve relevant prior learnings
 - inspect capability risks for the upcoming task
+- choose an execution strategy with a verification plan
 - after the task, diagnose weaknesses and decide whether training or evaluation is needed
+- refresh the learning agenda if priorities changed
+- track progress through the evaluation ladder (`recorded` -> `promoted`)
+- promote only validated, transferable strategies
 
 ## Enable
 

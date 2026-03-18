@@ -1,2 +1,5 @@
 # macOS
 .DS_Store
+
+# Generated benchmark and evaluation outputs
+eval-results/

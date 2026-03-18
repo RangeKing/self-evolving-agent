@@ -1,25 +1,24 @@
+[![English](https://img.shields.io/badge/Language-English-0A7CFF?style=flat-square)](./README.md)
+[![简体中文](https://img.shields.io/badge/%E8%AF%AD%E8%A8%80-%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-16A34A?style=flat-square)](./README.zh-CN.md)
+
 # self-evolving-agent
 
-Most self-improving agents only log mistakes.
+[![OpenClaw Skill](https://img.shields.io/badge/OpenClaw-Skill-111827?style=flat-square)](./SKILL.md)
+[![Model-in-the-Loop Benchmark](https://img.shields.io/badge/Benchmark-Model--in--the--Loop-7C3AED?style=flat-square)](./benchmarks/suite.json)
+[![Bilingual Docs](https://img.shields.io/badge/Docs-EN%20%7C%20ZH-F59E0B?style=flat-square)](./README.zh-CN.md)
+[![Goal-Driven Learning](https://img.shields.io/badge/Agent-Goal--Driven%20Learning-0F766E?style=flat-square)](./system/coordinator.md)
 
-`self-evolving-agent` learns more like a serious student: it diagnoses capability gaps, generates training units, evaluates progress, verifies transfer, and only then internalizes durable strategies.
+🧠 Most self-improving agents only log mistakes.
 
-This project is a full OpenClaw skill redesign built on top of the useful parts of classic self-improvement systems:
+`self-evolving-agent` is an OpenClaw-first skill that turns passive self-improvement into a full capability evolution loop: diagnose gaps, set learning priorities, generate training units, evaluate progress, verify transfer, and only then promote durable strategies.
 
-- incident logging
-- correction capture
-- recurring-pattern detection
-- long-term promotion of high-value guidance
+It preserves the best parts of [`self-improving-agent`](https://github.com/peterskoett/self-improving-agent), but upgrades the paradigm from:
 
-Those strengths remain, but only as the memory layer.
+- incident logging -> capability evolution
+- passive memory -> active learning agenda
+- correction archive -> curriculum + evaluation + promotion gate
 
-The new layer is capability evolution.
-
-This upgraded version also adds a control layer: a proactive learning agenda that selects the next capabilities to train, instead of waiting for every lesson to emerge only after incidents.
-
-This repository is intentionally structured as an OpenClaw-first skill project. It does not require `agents/openai.yaml` to be operational.
-
-## Why This Is A New Paradigm
+## ✨ Why It Exists
 
 Traditional self-improving agents often stop at:
 
@@ -27,7 +26,7 @@ Traditional self-improving agents often stop at:
 - "log the fix"
 - "write a rule"
 
-That helps prevent repeated mistakes, but it does not answer the harder questions:
+That helps reduce repeated mistakes, but it does not answer the harder questions:
 
 - What can the agent reliably do today?
 - Which capability is actually weak?
@@ -35,65 +34,99 @@ That helps prevent repeated mistakes, but it does not answer the harder question
 - Has it truly learned, or only recorded?
 - Can the strategy transfer to a different task?
 
-`self-evolving-agent` answers those questions with a structured loop:
+`self-evolving-agent` is built to answer those questions explicitly.
 
-1. Diagnose the task.
-2. Map the required capabilities.
-3. Detect the weakest link.
-4. Prioritize active learning goals.
-5. Generate targeted training.
-6. Evaluate progress.
-7. Test transfer.
-8. Promote only validated strategies.
+## 📊 self-evolving-agent vs self-improving-agent
 
-## What It Keeps From `self-improving-agent`
+| Dimension | `self-improving-agent` | `self-evolving-agent` |
+| --- | --- | --- |
+| Primary mode | Reactive correction | Goal-driven capability evolution |
+| Core unit | Incident, error, note | Capability, training unit, evaluation state |
+| Memory model | Learnings and recurring issues | Learnings + capability map + learning agenda |
+| Before-task behavior | Review past notes if relevant | Review notes, capability risks, and active training priorities |
+| After-task behavior | Log errors and lessons | Diagnose weakest capability, update map, revise agenda, create training if needed |
+| Recurrence handling | Detect recurring patterns | Convert recurrence into curriculum with pass criteria |
+| Learning states | Mostly implicit | `recorded -> understood -> practiced -> passed -> generalized -> promoted` |
+| Promotion rule | Promote useful rules | Promote only validated, transferable strategies |
+| Transfer awareness | Limited | Explicit transfer check before promotion |
+| What it optimizes for | Fewer repeated mistakes | More independence, stability, transfer, and unfamiliar-task competence |
+
+## 🚀 What Makes This Different
+
+- 🧭 **Learning agenda:** keeps only 1-3 high-leverage capabilities active at a time
+- 🗺️ **Capability map:** tracks level, evidence, limits, failure modes, and upgrade conditions
+- 🔬 **Diagnosis layer:** turns incidents into capability-level root-cause analysis
+- 🏋️ **Curriculum layer:** generates drills, pass criteria, and transfer scenarios
+- ✅ **Evaluation ladder:** separates writing something down from actually learning it
+- 🔒 **Promotion gate:** prevents brittle one-off rules from polluting long-term behavior
+- 🤝 **Memory retention:** still preserves classic logging for errors, learnings, and feature requests
+
+## 🧱 Architecture
+
+```mermaid
+flowchart TD
+    A["Task Starts"] --> B["Retrieve Memory"]
+    B --> C["Pre-Task Risk Diagnosis"]
+    C --> D["Choose Execution Strategy"]
+    D --> E["Perform Task"]
+    E --> F["Post-Task Reflection"]
+    F --> G["Capability Update"]
+    G --> H["Training Decision"]
+    H --> I["Evaluation State Update"]
+    I --> J["Promotion Decision"]
+
+    K["Learning Agenda Review"] --> B
+    K --> G
+    H --> K
+    I --> K
+```
+
+## 🔁 Closed Loop
+
+For every meaningful cycle, the skill runs this loop:
+
+1. Classify the task
+2. Retrieve relevant learnings and capabilities
+3. Run a pre-task risk diagnosis
+4. Choose an execution strategy
+5. Perform the task
+6. Reflect after completion
+7. Update the capability map
+8. Generate or revise training
+9. Evaluate learning progress
+10. Promote only validated strategies
+
+Outside the task loop, it also runs a **learning agenda review** when priorities should change.
+
+## 🧩 What It Keeps From self-improving-agent
 
 - Error logging
 - Learning capture
 - Feature request logging
-- Recurring issue detection
+- Recurring pattern detection
 - Review of past learnings before major work
 - Promotion into durable workspace context
 - Hook-friendly operation
 
-## What It Adds
+Those strengths remain, but only as the **memory layer**, not the whole system.
 
-- Capability map with levels, evidence, failure modes, and upgrade criteria
-- Learning diagnoser that distinguishes incidents from systemic weaknesses
-- Learning agenda that keeps only 1-3 high-leverage capability goals active at a time
-- Curriculum builder that creates concrete training units
-- Evaluator that tracks `recorded -> understood -> practiced -> passed -> generalized -> promoted`
-- Promotion gate that requires training success and transfer evidence
-- Reflection routines that force self-explanation, counterexamples, and trigger signatures
+## 🎯 Best Fit
 
-## What Classic Self-Improvement Misses
+Use this skill when you want an agent that should:
 
-Classic mistake-log systems are useful, but they usually remain limited in four ways:
+- improve across sessions
+- become safer on unfamiliar work
+- convert repeated failures into deliberate practice
+- distinguish recording from mastery
+- prove transfer before promotion
 
-1. They are reactive correction systems, not proactive learning systems.
-2. They behave like error notebooks, not capability growth systems.
-3. They accumulate rules, but often lack a real training loop.
-4. They confuse persistence with mastery, even though recording is not the same as learning.
-
-`self-evolving-agent` is designed around those gaps. It treats every meaningful incident as potential evidence about capability level, training need, evaluation state, transfer readiness, and agenda priority.
-
-## Core Philosophy
-
-Do not optimize only for "fewer repeated mistakes."
-
-Optimize for agents that become:
-
-- more independent
-- more stable
-- more transferable
-- better on unfamiliar tasks
-
-## Directory Structure
+## 📁 Repository Layout
 
 ```text
 self-evolving-agent/
 ├── SKILL.md
 ├── README.md
+├── README.zh-CN.md
 ├── install.md
 ├── agents/
 │   └── openai.yaml
@@ -124,8 +157,6 @@ self-evolving-agent/
 │   ├── demo-2-training-loop.md
 │   ├── demo-3-promotion-and-transfer.md
 │   └── demo-4-agenda-review.md
-├── evals/
-│   └── evals.json
 ├── hooks/
 │   └── openclaw/
 │       ├── HOOK.md
@@ -138,42 +169,70 @@ self-evolving-agent/
     └── run-evals.py
 ```
 
-## Mental Model
+## ⚡ Quick Start
 
-Think of the system as four stacked layers:
+1. Install the skill into your OpenClaw skills directory.
+2. Bootstrap a persistent `.evolution` workspace.
+3. Review the learning agenda before difficult tasks.
+4. Let the task loop update memory, diagnosis, training, and evaluation artifacts.
+5. Run the benchmark suite to see how the skill performs in model-in-the-loop conditions.
 
-1. Memory layer
-   - Errors, learnings, and feature requests
-2. Diagnosis layer
-   - Which capability failed, and why
-3. Training layer
-   - What deliberate practice should happen next
-4. Policy layer
-   - What has earned promotion into durable behavior
+```bash
+cp -r self-evolving-agent ~/.openclaw/skills/
+~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-evals.py ~/.openclaw/skills/self-evolving-agent
+python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evolving-agent
+```
 
-Above those layers sits a control loop:
+More setup details are in [install.md](./install.md).
 
-- Learning agenda
-  - Which capabilities are the top priorities right now
-  - What evidence would retire or advance them
+## 🧪 Benchmarking
 
-## Best Fit
+This repository includes two evaluation modes:
 
-Use this skill when you want an agent that can:
+- `scripts/run-evals.py`
+  - Structural compliance checks for files, modules, and benchmark assets
+- `scripts/run-benchmark.py`
+  - Real model-in-the-loop execution using `codex exec`
+  - Captures candidate prompt, raw events, final output, judge output, and report
 
-- improve across sessions
-- convert repeated failures into curriculum
-- measure whether learning actually happened
-- grow from incident handling into capability development
+Example smoke run:
 
-## Quick Start
+```bash
+python3 scripts/run-benchmark.py \
+  --skill-dir . \
+  --candidate-model gpt-5.4-mini \
+  --judge-model gpt-5.4-mini \
+  --max-scenarios 1 \
+  --timeout-seconds 90
+```
 
-1. Install the skill in your OpenClaw skills directory.
-2. Run `scripts/bootstrap-workspace.sh` to seed a directly usable `.evolution` workspace.
-3. Enable the optional hook if you want bootstrap reminders.
-4. Before difficult tasks, review the active learning agenda and capability risks.
-5. After meaningful tasks, update memory, diagnosis, training, evaluation, and agenda artifacts.
-6. Run `scripts/run-evals.py` for a repeatable structural compliance check.
-7. Run `scripts/run-benchmark.py` for a true model-in-the-loop benchmark.
+## 🧭 Use Cases
 
-Setup details are in [install.md](./install.md).
+- Upgrading a self-correcting agent into a self-training agent
+- Running postmortems that produce training, not just notes
+- Building skill memory systems that do not confuse logging with mastery
+- Evaluating whether an agent can transfer strategies across task families
+- Designing agent curricula for research, coding, verification, or operations workflows
+
+## 🛣️ Roadmap
+
+- [x] Memory, diagnosis, curriculum, evaluator, reflection, promotion modules
+- [x] Capability bootstrap map and proactive learning agenda
+- [x] Model-in-the-loop benchmark harness
+- [ ] More benchmark scenarios for coding, research, and long-horizon execution
+- [ ] Optional benchmark trend summaries across repeated runs
+- [ ] Example workspace packs for different agent domains
+
+## 💡 What High-Star README Elements Were Still Missing
+
+On top of the original README, the main things missing for a stronger GitHub homepage were:
+
+- clearer differentiation from the predecessor project
+- stronger visual scanning with badges and emoji anchors
+- bilingual accessibility
+- an at-a-glance architecture view
+- benchmark discoverability from the homepage
+- a roadmap that signals direction and project maturity
+
+This version fills those gaps directly.

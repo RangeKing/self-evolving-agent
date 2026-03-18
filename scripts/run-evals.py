@@ -14,6 +14,7 @@ from pathlib import Path
 REQUIRED_FILES = [
     "SKILL.md",
     "README.md",
+    "README.zh-CN.md",
     "install.md",
     "agents/openai.yaml",
     "benchmarks/suite.json",
@@ -193,6 +194,22 @@ def main() -> int:
             "benchmark scenario suite",
             benchmark_ok,
             "complete" if benchmark_ok else f"missing text: {', '.join(benchmark_missing)}",
+        )
+    )
+
+    bilingual_ok, bilingual_missing = require_text(
+        skill_dir / "README.md",
+        [
+            "README.zh-CN.md",
+            "self-evolving-agent vs self-improving-agent",
+            "Model-in-the-Loop Benchmark",
+        ],
+    )
+    checks.append(
+        (
+            "bilingual project README",
+            bilingual_ok,
+            "complete" if bilingual_ok else f"missing text: {', '.join(bilingual_missing)}",
         )
     )
 

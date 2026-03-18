@@ -1,0 +1,12 @@
+[
+  {
+    "id": "pre-task-risk-diagnosis",
+    "title": "Pre-task capability risk diagnosis",
+    "candidate_exit_code": 0,
+    "judge_exit_code": 0,
+    "score_ratio": 1.0,
+    "pass": true,
+    "blocking_failures": [],
+    "judge_summary": "The candidate strongly satisfies all four required criteria. It classifies the task up front, specifies what prior learnings/capabilities to retrieve, names concrete capability risks and failure modes, and gives a verification-first execution strategy before any edits."
+  }
+]

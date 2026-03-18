@@ -1,0 +1,16 @@
+[
+  {
+    "id": "pre-task-risk-diagnosis",
+    "title": "Pre-task capability risk diagnosis",
+    "candidate_exit_code": -15,
+    "candidate_timed_out": false,
+    "judge_exit_code": 0,
+    "judge_timed_out": false,
+    "score_ratio": 0.0,
+    "pass": false,
+    "blocking_failures": [
+      "candidate-run-failed"
+    ],
+    "judge_summary": "Candidate run failed before judgment."
+  }
+]

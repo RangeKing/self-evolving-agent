@@ -1,0 +1,14 @@
+[
+  {
+    "id": "pre-task-risk-diagnosis",
+    "title": "Pre-task capability risk diagnosis",
+    "candidate_exit_code": 0,
+    "candidate_timed_out": false,
+    "judge_exit_code": 0,
+    "judge_timed_out": false,
+    "score_ratio": 1.0,
+    "pass": true,
+    "blocking_failures": [],
+    "judge_summary": "The candidate answer satisfies all four required criteria: it classifies the task as unfamiliar and high consequence, identifies concrete past learnings to retrieve, diagnoses likely weak capabilities, and lays out a verification-first execution plan before edits."
+  }
+]

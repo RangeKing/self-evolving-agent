@@ -11,7 +11,7 @@
 [![Bilingual Docs](https://img.shields.io/badge/Docs-EN%20%7C%20ZH-F59E0B?style=flat-square)](./README.zh-CN.md)
 [![Goal-Driven Learning](https://img.shields.io/badge/Agent-Goal--Driven%20Learning-0F766E?style=flat-square)](./system/coordinator.md)
 
-🧠 Most self-improving agents only log mistakes.
+🧠 self-improving agents only log mistakes.
 
 `self-evolving-agent` is an OpenClaw-first skill that turns passive self-improvement into a full capability evolution loop: diagnose gaps, set learning priorities, generate training units, evaluate progress, verify transfer, and only then promote durable strategies.
 

@@ -234,15 +234,3 @@ python3 scripts/run-benchmark.py \
 - [ ] Optional benchmark trend summaries across repeated runs
 - [ ] Example workspace packs for different agent domains
 
-## 💡 What High-Star README Elements Were Still Missing
-
-On top of the original README, the main things missing for a stronger GitHub homepage were:
-
-- clearer differentiation from the predecessor project
-- stronger visual scanning with badges and emoji anchors
-- bilingual accessibility
-- an at-a-glance architecture view
-- benchmark discoverability from the homepage
-- a roadmap that signals direction and project maturity
-
-This version fills those gaps directly.

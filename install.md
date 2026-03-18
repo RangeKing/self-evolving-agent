@@ -67,6 +67,7 @@ If your agent environment supports shell hooks, you can use:
 - `scripts/activator.sh` for bootstrap reminders
 - `scripts/error-detector.sh` for command-error reminders
 - `scripts/run-evals.py` for repeatable local compliance checks
+- `scripts/run-benchmark.py` for model-in-the-loop benchmark runs
 
 ## Promotion Targets
 
@@ -101,4 +102,10 @@ Run the repeatable local compliance suite:
 
 ```bash
 python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-evals.py ~/.openclaw/skills/self-evolving-agent
+```
+
+Run the model-in-the-loop benchmark:
+
+```bash
+python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evolving-agent
 ```

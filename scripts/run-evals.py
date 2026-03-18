@@ -15,6 +15,9 @@ REQUIRED_FILES = [
     "SKILL.md",
     "README.md",
     "install.md",
+    "agents/openai.yaml",
+    "benchmarks/suite.json",
+    "benchmarks/schemas/judge-output.schema.json",
     "system/coordinator.md",
     "modules/learning-agenda.md",
     "modules/diagnose.md",
@@ -37,6 +40,7 @@ REQUIRED_FILES = [
     "hooks/openclaw/HOOK.md",
     "hooks/openclaw/handler.ts",
     "scripts/bootstrap-workspace.sh",
+    "scripts/run-benchmark.py",
     "evals/evals.json",
 ]
 
@@ -173,6 +177,22 @@ def main() -> int:
             "hook reminder coverage",
             hook_ok,
             "complete" if hook_ok else f"missing text: {', '.join(hook_missing)}",
+        )
+    )
+
+    benchmark_ok, benchmark_missing = require_text(
+        skill_dir / "benchmarks/suite.json",
+        [
+            "pre-task-risk-diagnosis",
+            "evaluation-and-promotion",
+            "agenda-review",
+        ],
+    )
+    checks.append(
+        (
+            "benchmark scenario suite",
+            benchmark_ok,
+            "complete" if benchmark_ok else f"missing text: {', '.join(benchmark_missing)}",
         )
     )
 

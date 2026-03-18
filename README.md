@@ -97,6 +97,10 @@ self-evolving-agent/
 ├── install.md
 ├── agents/
 │   └── openai.yaml
+├── benchmarks/
+│   ├── suite.json
+│   └── schemas/
+│       └── judge-output.schema.json
 ├── system/
 │   └── coordinator.md
 ├── modules/
@@ -130,6 +134,7 @@ self-evolving-agent/
     ├── activator.sh
     ├── bootstrap-workspace.sh
     ├── error-detector.sh
+    ├── run-benchmark.py
     └── run-evals.py
 ```
 
@@ -168,6 +173,7 @@ Use this skill when you want an agent that can:
 3. Enable the optional hook if you want bootstrap reminders.
 4. Before difficult tasks, review the active learning agenda and capability risks.
 5. After meaningful tasks, update memory, diagnosis, training, evaluation, and agenda artifacts.
-6. Run `scripts/run-evals.py` for a repeatable local compliance check.
+6. Run `scripts/run-evals.py` for a repeatable structural compliance check.
+7. Run `scripts/run-benchmark.py` for a true model-in-the-loop benchmark.
 
 Setup details are in [install.md](./install.md).

@@ -1,6 +1,6 @@
 ---
 name: self-evolving-agent
-description: Build a goal-driven self-learning loop for OpenClaw and coding agents. Use when the agent should not only log mistakes, but diagnose capability gaps, update a capability map, generate training units, evaluate progress, validate transfer, and promote only proven strategies into long-term behavior. Also use before major tasks to retrieve relevant learnings, inspect capability risks, and choose safer execution strategies.
+description: Build a goal-driven self-learning loop for OpenClaw and coding agents. Use when the agent should not only log mistakes, but diagnose capability gaps, maintain a capability map and learning agenda, generate training units, evaluate progress, validate transfer, and promote only proven strategies into long-term behavior. Also use before major tasks to retrieve relevant learnings, inspect capability risks, and choose safer execution strategies.
 metadata:
   short-description: Capability evolution for agents
 ---
@@ -47,6 +47,7 @@ Keep the original strengths as the memory layer:
 This skill adds an active learning layer:
 
 - Capability map with levels, failure modes, and upgrade criteria
+- Proactive learning agenda that selects the next 1-3 capabilities to train
 - Task-level diagnosis of root causes
 - Training unit generation for recurring weaknesses
 - Evaluation gates that separate recording from mastery
@@ -68,9 +69,28 @@ Run the following loop, in order:
 9. Evaluate learning progress.
 10. Promote only validated strategies.
 
+## Control Loop
+
+Outside the 10-step task loop, maintain an explicit learning agenda.
+
+Run an agenda review when any of the following is true:
+
+- The workspace is new and no calibrated capability map exists.
+- Five meaningful cycles have passed since the last review.
+- A `structural_gap` or failed transfer was detected.
+- A long-horizon or unfamiliar task is about to begin.
+
+During agenda review:
+
+- choose the top 1-3 capabilities to train next
+- defer lower-leverage weaknesses instead of training everything at once
+- define what evidence would retire or advance each focus
+- link each focus to existing or new training units
+
 ## File Map
 
 - Main orchestration: `system/coordinator.md`
+- Learning agenda and review cycle: `modules/learning-agenda.md`
 - Diagnosis: `modules/diagnose.md`
 - Capability definitions and update rules: `modules/capability-map.md`
 - Training unit design: `modules/curriculum.md`
@@ -84,6 +104,7 @@ Assets and ledgers:
 - `assets/ERRORS.md`
 - `assets/FEATURE_REQUESTS.md`
 - `assets/CAPABILITIES.md`
+- `assets/LEARNING_AGENDA.md`
 - `assets/TRAINING_UNITS.md`
 - `assets/EVALUATIONS.md`
 
@@ -92,6 +113,7 @@ Assets and ledgers:
 ### Before a substantial task
 
 - Read `system/coordinator.md`.
+- Check whether `assets/LEARNING_AGENDA.md` requires a review cycle.
 - Retrieve relevant entries from `LEARNINGS`, `ERRORS`, `CAPABILITIES`, and `TRAINING_UNITS`.
 - Identify the top 1-3 risk capabilities for this task.
 
@@ -100,6 +122,7 @@ Assets and ledgers:
 - Log incident-level observations in the memory files.
 - Diagnose the weakest capability involved.
 - Update the capability map with evidence, not vibes.
+- Refresh the learning agenda if a focus should change.
 - If the issue is recurring or high-leverage, create or revise a training unit.
 - Record evaluation status using the six-state ladder.
 
@@ -123,6 +146,7 @@ In that case, log the learning only if it is unusually reusable.
 
 When this skill is active, prefer producing these artifacts:
 
+- A learning agenda review when triggers fire
 - A short pre-task risk diagnosis
 - A post-task capability diagnosis
 - A `TRAINING_UNIT` when recurrence or weakness appears
@@ -135,4 +159,3 @@ When this skill is active, prefer producing these artifacts:
 2. Load only the modules needed for the current step.
 3. Use the asset templates as the canonical output format.
 4. Keep long-term memory strict: only promote validated patterns.
-

@@ -22,15 +22,10 @@ Create a persistent workspace memory area:
 mkdir -p ~/.openclaw/workspace/.evolution
 ```
 
-Copy the template ledgers:
+Seed the workspace ledgers with the bootstrap script:
 
 ```bash
-cp ~/.openclaw/skills/self-evolving-agent/assets/LEARNINGS.md ~/.openclaw/workspace/.evolution/LEARNINGS.md
-cp ~/.openclaw/skills/self-evolving-agent/assets/ERRORS.md ~/.openclaw/workspace/.evolution/ERRORS.md
-cp ~/.openclaw/skills/self-evolving-agent/assets/FEATURE_REQUESTS.md ~/.openclaw/workspace/.evolution/FEATURE_REQUESTS.md
-cp ~/.openclaw/skills/self-evolving-agent/assets/CAPABILITIES.md ~/.openclaw/workspace/.evolution/CAPABILITIES.md
-cp ~/.openclaw/skills/self-evolving-agent/assets/TRAINING_UNITS.md ~/.openclaw/workspace/.evolution/TRAINING_UNITS.md
-cp ~/.openclaw/skills/self-evolving-agent/assets/EVALUATIONS.md ~/.openclaw/workspace/.evolution/EVALUATIONS.md
+~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
 ```
 
 ## Recommended Workspace Convention
@@ -46,6 +41,7 @@ cp ~/.openclaw/skills/self-evolving-agent/assets/EVALUATIONS.md ~/.openclaw/work
     ├── ERRORS.md
     ├── FEATURE_REQUESTS.md
     ├── CAPABILITIES.md
+    ├── LEARNING_AGENDA.md
     ├── TRAINING_UNITS.md
     └── EVALUATIONS.md
 ```
@@ -70,6 +66,7 @@ If your agent environment supports shell hooks, you can use:
 
 - `scripts/activator.sh` for bootstrap reminders
 - `scripts/error-detector.sh` for command-error reminders
+- `scripts/run-evals.py` for repeatable local compliance checks
 
 ## Promotion Targets
 
@@ -84,15 +81,24 @@ Only promote validated strategies into durable context:
 
 Before major tasks:
 
-1. Review relevant entries from `LEARNINGS`, `ERRORS`, and `CAPABILITIES`.
-2. Identify the most likely failure mode.
-3. Choose an execution strategy that reduces that risk.
+1. Review `LEARNING_AGENDA` to see what the agent is actively training.
+2. Review relevant entries from `LEARNINGS`, `ERRORS`, and `CAPABILITIES`.
+3. Identify the most likely failure mode.
+4. Choose an execution strategy that reduces that risk.
 
 After major tasks:
 
 1. Log incidents and learnings.
 2. Diagnose the weakest capability involved.
-3. Create or update a training unit if recurrence appears.
-4. Record evaluation status.
-5. Promote only after validated transfer.
+3. Refresh the learning agenda if priorities changed.
+4. Create or update a training unit if recurrence appears.
+5. Record evaluation status.
+6. Promote only after validated transfer.
 
+## Validation
+
+Run the repeatable local compliance suite:
+
+```bash
+python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-evals.py ~/.openclaw/skills/self-evolving-agent
+```

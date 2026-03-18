@@ -1,0 +1,4 @@
+interface:
+  display_name: "Self-Evolving Agent"
+  short_description: "Goal-driven capability evolution for agents"
+  default_prompt: "Use $self-evolving-agent to diagnose capability gaps, set learning priorities, and promote only validated strategies."

@@ -15,6 +15,8 @@ Those strengths remain, but only as the memory layer.
 
 The new layer is capability evolution.
 
+This upgraded version also adds a control layer: a proactive learning agenda that selects the next capabilities to train, instead of waiting for every lesson to emerge only after incidents.
+
 This repository is intentionally structured as an OpenClaw-first skill project. It does not require `agents/openai.yaml` to be operational.
 
 ## Why This Is A New Paradigm
@@ -38,10 +40,11 @@ That helps prevent repeated mistakes, but it does not answer the harder question
 1. Diagnose the task.
 2. Map the required capabilities.
 3. Detect the weakest link.
-4. Generate targeted training.
-5. Evaluate progress.
-6. Test transfer.
-7. Promote only validated strategies.
+4. Prioritize active learning goals.
+5. Generate targeted training.
+6. Evaluate progress.
+7. Test transfer.
+8. Promote only validated strategies.
 
 ## What It Keeps From `self-improving-agent`
 
@@ -57,6 +60,7 @@ That helps prevent repeated mistakes, but it does not answer the harder question
 
 - Capability map with levels, evidence, failure modes, and upgrade criteria
 - Learning diagnoser that distinguishes incidents from systemic weaknesses
+- Learning agenda that keeps only 1-3 high-leverage capability goals active at a time
 - Curriculum builder that creates concrete training units
 - Evaluator that tracks `recorded -> understood -> practiced -> passed -> generalized -> promoted`
 - Promotion gate that requires training success and transfer evidence
@@ -71,7 +75,7 @@ Classic mistake-log systems are useful, but they usually remain limited in four 
 3. They accumulate rules, but often lack a real training loop.
 4. They confuse persistence with mastery, even though recording is not the same as learning.
 
-`self-evolving-agent` is designed around those gaps. It treats every meaningful incident as potential evidence about capability level, training need, evaluation state, and transfer readiness.
+`self-evolving-agent` is designed around those gaps. It treats every meaningful incident as potential evidence about capability level, training need, evaluation state, transfer readiness, and agenda priority.
 
 ## Core Philosophy
 
@@ -91,6 +95,8 @@ self-evolving-agent/
 ├── SKILL.md
 ├── README.md
 ├── install.md
+├── agents/
+│   └── openai.yaml
 ├── system/
 │   └── coordinator.md
 ├── modules/
@@ -98,6 +104,7 @@ self-evolving-agent/
 │   ├── curriculum.md
 │   ├── diagnose.md
 │   ├── evaluator.md
+│   ├── learning-agenda.md
 │   ├── promotion.md
 │   └── reflection.md
 ├── assets/
@@ -105,12 +112,14 @@ self-evolving-agent/
 │   ├── ERRORS.md
 │   ├── EVALUATIONS.md
 │   ├── FEATURE_REQUESTS.md
+│   ├── LEARNING_AGENDA.md
 │   ├── LEARNINGS.md
 │   └── TRAINING_UNITS.md
 ├── demos/
 │   ├── demo-1-diagnosis.md
 │   ├── demo-2-training-loop.md
-│   └── demo-3-promotion-and-transfer.md
+│   ├── demo-3-promotion-and-transfer.md
+│   └── demo-4-agenda-review.md
 ├── evals/
 │   └── evals.json
 ├── hooks/
@@ -119,7 +128,9 @@ self-evolving-agent/
 │       └── handler.ts
 └── scripts/
     ├── activator.sh
-    └── error-detector.sh
+    ├── bootstrap-workspace.sh
+    ├── error-detector.sh
+    └── run-evals.py
 ```
 
 ## Mental Model
@@ -135,6 +146,12 @@ Think of the system as four stacked layers:
 4. Policy layer
    - What has earned promotion into durable behavior
 
+Above those layers sits a control loop:
+
+- Learning agenda
+  - Which capabilities are the top priorities right now
+  - What evidence would retire or advance them
+
 ## Best Fit
 
 Use this skill when you want an agent that can:
@@ -147,9 +164,10 @@ Use this skill when you want an agent that can:
 ## Quick Start
 
 1. Install the skill in your OpenClaw skills directory.
-2. Copy the asset templates into a persistent workspace folder.
+2. Run `scripts/bootstrap-workspace.sh` to seed a directly usable `.evolution` workspace.
 3. Enable the optional hook if you want bootstrap reminders.
-4. Before difficult tasks, review relevant learnings and capability risks.
-5. After meaningful tasks, update memory, diagnosis, training, and evaluation artifacts.
+4. Before difficult tasks, review the active learning agenda and capability risks.
+5. After meaningful tasks, update memory, diagnosis, training, evaluation, and agenda artifacts.
+6. Run `scripts/run-evals.py` for a repeatable local compliance check.
 
 Setup details are in [install.md](./install.md).

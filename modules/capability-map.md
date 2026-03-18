@@ -44,6 +44,12 @@ Use a 5-level rubric:
 
 ## Update Rules
 
+### Bootstrap with conservative seeds
+
+If the map is empty, start from conservative provisional entries instead of a blank file.
+
+The first goal is not perfect calibration. The first goal is to make current strengths, limits, and next training focus explicit enough to drive behavior.
+
 ### Upgrade only when there is evidence
 
 Good evidence includes:
@@ -68,6 +74,7 @@ Do not change levels after every minor task. Prefer updating evidence, failure m
 ## What To Track Per Capability
 
 - current level
+- assessment status
 - confidence
 - recent evidence
 - common failure modes
@@ -81,6 +88,7 @@ Do not change levels after every minor task. Prefer updating evidence, failure m
 ## [CAP-YYYYMMDD-XXX] capability_name
 
 **Level**: L1 aware | L2 assisted | L3 reliable | L4 adaptive | L5 transferable
+**Assessment Status**: provisional | calibrated
 **Confidence**: low | medium | high
 **Last Reviewed**: YYYY-MM-DD
 
@@ -110,7 +118,17 @@ What evidence is required for the next level.
 - TRN-...
 - EVL-...
 - LRN-...
+- AGD-...
 ```
+
+## Calibration Triggers
+
+Recalibrate a capability when:
+
+- it is selected as an active agenda focus
+- a structural gap was diagnosed
+- a transfer attempt succeeded or failed
+- five meaningful cycles have accumulated since the last review
 
 ## Mapping Guidelines
 
@@ -153,4 +171,3 @@ Focus on recalling the right prior learning at the right time.
 ### Long-horizon task handling
 
 Focus on progress tracking, context maintenance, and multi-step closure.
-

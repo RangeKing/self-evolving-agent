@@ -61,6 +61,7 @@ Choose:
 - create training unit
 - run evaluation
 - mark as promotion candidate
+- trigger agenda review if priorities should change
 
 ## Reflection Template
 
@@ -88,10 +89,9 @@ A nearby task where this lesson should still help.
 Short retrieval phrase.
 
 ### Next Action
-log_only | training_unit | evaluation | promotion_candidate
+log_only | training_unit | evaluation | promotion_candidate | agenda_review
 ```
 
 ## Reflection Standard
 
 If the reflection cannot produce a clear self-explanation, counterexample, and trigger signature, keep the lesson below `understood`.
-

@@ -18,6 +18,18 @@ The system must preserve memory logging, but memory is not the endpoint. The end
 
 ## Operating Stack
 
+### Layer 0: Learning Agenda
+
+Maintain a small active agenda so the system can choose what to train next instead of reacting incident by incident.
+
+Primary module:
+
+- `modules/learning-agenda.md`
+
+Primary file:
+
+- `assets/LEARNING_AGENDA.md`
+
 ### Layer 1: Memory
 
 Capture:
@@ -80,6 +92,18 @@ Primary files:
 - `assets/EVALUATIONS.md`
 - `assets/CAPABILITIES.md`
 
+## Control Loop
+
+The 10-step task loop remains the core execution cycle.
+
+Outside that loop, run a learning agenda review whenever a trigger fires. Agenda review decides which 1-3 capabilities deserve deliberate practice now and which should be deferred.
+
+If the agenda changes, update:
+
+- `assets/LEARNING_AGENDA.md`
+- `assets/CAPABILITIES.md`
+- `assets/TRAINING_UNITS.md`
+
 ## Standard Workflow
 
 ### Step 1: Classify task
@@ -99,12 +123,14 @@ Retrieve:
 - related learning entries
 - related errors
 - matching capabilities
+- active learning agenda items
 - open training units
 
 Ask:
 
 - Have I failed in a similar way before?
 - Is there an existing strategy that should be re-used?
+- Is this task an opportunity to practice an active focus capability?
 - Is there an open training unit relevant to this task?
 
 ### Step 3: Pre-task risk diagnosis
@@ -157,6 +183,7 @@ Mandatory questions:
 Use `modules/capability-map.md` to update:
 
 - current level
+- assessment status
 - evidence
 - failure modes
 - next focus
@@ -170,6 +197,8 @@ Create a training unit if any condition is true:
 - weakness blocked a high-value task
 - strategy was understood but not executable under pressure
 - the agent compensated through luck or user rescue
+
+If the new unit changes what should be trained now, run `modules/learning-agenda.md`.
 
 ### Step 9: Evaluate progress
 
@@ -241,9 +270,9 @@ Do not:
 
 For each meaningful cycle, produce:
 
+0. `Agenda Decision` if a review trigger fired
 1. `Task Diagnosis`
 2. `Capability Update`
 3. `Training Decision`
 4. `Evaluation State`
 5. `Promotion Decision`
-

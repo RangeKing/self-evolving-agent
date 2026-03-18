@@ -11,7 +11,7 @@
 [![Model-in-the-Loop Benchmark](https://img.shields.io/badge/Benchmark-Model--in--the--Loop-7C3AED?style=flat-square)](./benchmarks/suite.json)
 [![Goal-Driven Learning](https://img.shields.io/badge/Agent-Goal--Driven%20Learning-0F766E?style=flat-square)](./system/coordinator.md)
 
-🧠 self-improving agents 只会记录错误。
+🧠 self-improving-agent 只会记录错误。
 
 `self-evolving-agent` 是一个面向 OpenClaw 的 skill，它把被动式自我改进升级为完整的能力进化闭环：诊断能力缺口、设定学习优先级、生成训练单元、评估进步、验证迁移，最后才把真正有效的策略提升为长期行为。
 

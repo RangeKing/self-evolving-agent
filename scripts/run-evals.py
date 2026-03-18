@@ -16,9 +16,18 @@ REQUIRED_FILES = [
     "README.md",
     "README.zh-CN.md",
     "install.md",
+    "LICENSE",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
     "agents/openai.yaml",
     "benchmarks/suite.json",
     "benchmarks/schemas/judge-output.schema.json",
+    ".github/workflows/ci.yml",
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    ".github/ISSUE_TEMPLATE/feature_request.yml",
+    ".github/ISSUE_TEMPLATE/config.yml",
+    ".github/pull_request_template.md",
     "system/coordinator.md",
     "modules/learning-agenda.md",
     "modules/diagnose.md",
@@ -210,6 +219,23 @@ def main() -> int:
             "bilingual project README",
             bilingual_ok,
             "complete" if bilingual_ok else f"missing text: {', '.join(bilingual_missing)}",
+        )
+    )
+
+    governance_ok, governance_missing = require_text(
+        skill_dir / "README.md",
+        [
+            "Project Health",
+            "CONTRIBUTING.md",
+            "CHANGELOG.md",
+            "SECURITY.md",
+        ],
+    )
+    checks.append(
+        (
+            "repository governance links",
+            governance_ok,
+            "complete" if governance_ok else f"missing text: {', '.join(governance_missing)}",
         )
     )
 

@@ -4,6 +4,9 @@
 # self-evolving-agent
 
 [![OpenClaw Skill](https://img.shields.io/badge/OpenClaw-Skill-111827?style=flat-square)](./SKILL.md)
+[![CI](https://img.shields.io/github/actions/workflow/status/RangeKing/self-evolving-agent/ci.yml?branch=main&style=flat-square&label=CI)](https://github.com/RangeKing/self-evolving-agent/actions/workflows/ci.yml)
+[![License](https://img.shields.io/github/license/RangeKing/self-evolving-agent?style=flat-square)](./LICENSE)
+[![Stars](https://img.shields.io/github/stars/RangeKing/self-evolving-agent?style=flat-square)](https://github.com/RangeKing/self-evolving-agent/stargazers)
 [![Model-in-the-Loop Benchmark](https://img.shields.io/badge/Benchmark-Model--in--the--Loop-7C3AED?style=flat-square)](./benchmarks/suite.json)
 [![Bilingual Docs](https://img.shields.io/badge/Docs-EN%20%7C%20ZH-F59E0B?style=flat-square)](./README.md)
 [![Goal-Driven Learning](https://img.shields.io/badge/Agent-Goal--Driven%20Learning-0F766E?style=flat-square)](./system/coordinator.md)
@@ -187,6 +190,13 @@ python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-
 ```
 
 更完整的安装说明见 [install.md](./install.md)。
+
+## 🤝 项目治理
+
+- 贡献指南：[CONTRIBUTING.md](./CONTRIBUTING.md)
+- 变更记录：[CHANGELOG.md](./CHANGELOG.md)
+- 安全策略：[SECURITY.md](./SECURITY.md)
+- 开源许可证：[MIT](./LICENSE)
 
 ## 🧪 Benchmark
 

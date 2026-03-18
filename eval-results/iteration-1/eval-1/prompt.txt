@@ -1,0 +1,7 @@
+You are evaluating the local skill at /Users/rangeking/Code/self-evolving-agent.
+Read /Users/rangeking/Code/self-evolving-agent/SKILL.md and any referenced local files you need.
+Act as if the self-evolving-agent skill has triggered for the following user request.
+Return only the skill-produced content, not commentary about evaluation.
+
+User request:
+Use self-evolving-agent for this situation: I need to modify a production deployment workflow I have never touched before. Before doing any edits, give me a pre-task capability risk diagnosis, say which past learnings should be retrieved, and propose an execution strategy with a verification plan.

@@ -192,6 +192,43 @@ python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-
 
 More setup details are in [install.md](./install.md).
 
+## 📦 Installation Options
+
+### Option A: Install from ClawHub
+
+Use this when you want the simplest registry-based install into your current OpenClaw workspace.
+
+```bash
+npm i -g clawhub
+# or
+pnpm add -g clawhub
+
+clawhub install RangeKing/self-evo-agent
+```
+
+Then start a new OpenClaw session so the skill is loaded from your workspace `skills/` folder.
+
+### Option B: Let OpenClaw install it from GitHub
+
+If you prefer to have your agent fetch the GitHub repository directly, you can tell OpenClaw something like:
+
+```text
+Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evolving-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
+```
+
+This works well when you want the skill installed as a shared managed skill under `~/.openclaw/skills`.
+
+### Option C: Manual Git clone
+
+```bash
+git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evolving-agent
+~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+```
+
+### Safety Note
+
+ClawHub is a public registry and skills are effectively trusted local code. Review the repository or installed files before enabling hooks or running benchmark scripts.
+
 ## 🤝 Project Health
 
 - Contribution guide: [CONTRIBUTING.md](./CONTRIBUTING.md)
@@ -236,4 +273,3 @@ python3 scripts/run-benchmark.py \
 - [ ] More benchmark scenarios for coding, research, and long-horizon execution
 - [ ] Optional benchmark trend summaries across repeated runs
 - [ ] Example workspace packs for different agent domains
-

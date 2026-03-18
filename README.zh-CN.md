@@ -194,6 +194,43 @@ python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-
 
 更完整的安装说明见 [install.md](./install.md)。
 
+## 📦 安装方式
+
+### 方式 A：通过 ClawHub 安装
+
+适合希望直接通过 registry 安装到当前 OpenClaw workspace 的场景。
+
+```bash
+npm i -g clawhub
+# 或
+pnpm add -g clawhub
+
+clawhub install RangeKing/self-evo-agent
+```
+
+安装后请重启一个新的 OpenClaw session，让它从 workspace 的 `skills/` 目录重新加载。
+
+### 方式 B：让 OpenClaw 自己从 GitHub 下载并安装
+
+如果你希望让 agent 自己从 GitHub 仓库拉取 skill，可以直接对 OpenClaw 说：
+
+```text
+Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evolving-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
+```
+
+这种方式适合把它作为共享 managed skill 安装到 `~/.openclaw/skills`。
+
+### 方式 C：手动 Git clone
+
+```bash
+git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evolving-agent
+~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+```
+
+### 安全提示
+
+ClawHub 是公开 registry，skills 本质上属于受信任的本地代码。启用 hooks 或运行 benchmark 脚本前，建议先审阅仓库或安装后的文件内容。
+
 ## 🤝 项目健康
 
 - 贡献指南：[CONTRIBUTING.md](./CONTRIBUTING.md)
@@ -201,7 +238,7 @@ python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-
 - 安全策略：[SECURITY.md](./SECURITY.md)
 - 开源许可证：[MIT](./LICENSE)
 
-## 🧪 Benchmarking
+## 🧪 Benchmark
 
 仓库里提供两类评测：
 
@@ -238,4 +275,3 @@ python3 scripts/run-benchmark.py \
 - [ ] 增加更多 coding、research、long-horizon 场景 benchmark
 - [ ] 支持多次 benchmark run 的趋势汇总
 - [ ] 提供不同 agent 域的 workspace 示例包
-

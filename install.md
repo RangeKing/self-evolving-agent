@@ -2,13 +2,37 @@
 
 ## OpenClaw Installation
 
-### Option 1: Copy into the skills directory
+### Option 1: Install from ClawHub
+
+ClawHub is the public skill registry for OpenClaw. Install the CLI, then install this skill by its registry slug:
+
+```bash
+npm i -g clawhub
+# or
+pnpm add -g clawhub
+
+clawhub install RangeKing/self-evo-agent
+```
+
+OpenClaw will pick up the new workspace skill on the next session start.
+
+### Option 2: Let OpenClaw fetch it from GitHub
+
+Ask your OpenClaw agent to install the repository directly into the shared skills directory:
+
+```text
+Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evolving-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
+```
+
+This is useful when you want OpenClaw itself to download and inspect the skill before use.
+
+### Option 3: Copy into the skills directory
 
 ```bash
 cp -r self-evolving-agent ~/.openclaw/skills/
 ```
 
-### Option 2: Clone directly
+### Option 4: Clone directly
 
 ```bash
 git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evolving-agent
@@ -109,3 +133,7 @@ Run the model-in-the-loop benchmark:
 ```bash
 python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evolving-agent
 ```
+
+## Security Note
+
+Whether you install from ClawHub or GitHub, inspect the skill files before enabling hooks or running scripts that modify your OpenClaw workspace.

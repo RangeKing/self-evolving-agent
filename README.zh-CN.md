@@ -236,15 +236,3 @@ python3 scripts/run-benchmark.py \
 - [ ] 支持多次 benchmark run 的趋势汇总
 - [ ] 提供不同 agent 域的 workspace 示例包
 
-## 💡 作为高 star 项目首页，原 README 还缺什么
-
-在你要求的功能之外，一个更像高 star 项目的首页通常还需要：
-
-- 与前代项目的差异一眼可见
-- 更强的视觉扫描能力：badges、emoji、结构层次
-- 双语文档入口
-- 架构一图看懂
-- benchmark 从首页即可发现
-- roadmap 展示项目方向与成熟度
-
-这版 README 已经把这些部分一并补齐。

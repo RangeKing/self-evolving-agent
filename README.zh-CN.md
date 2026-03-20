@@ -130,7 +130,7 @@ flowchart TD
 示例：
 
 ```bash
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh \
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh \
   ~/.openclaw/workspace/.evolution \
   --migrate-from ~/.openclaw/workspace/.learnings
 openclaw hooks disable self-improvement
@@ -218,10 +218,10 @@ self-evolving-agent/
 5. 跑 benchmark 看这个 skill 在真实模型执行下的表现
 
 ```bash
-cp -r self-evolving-agent ~/.openclaw/skills/
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
-python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-evals.py ~/.openclaw/skills/self-evolving-agent
-python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evolving-agent
+cp -r self-evolving-agent ~/.openclaw/skills/self-evo-agent
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+python3 ~/.openclaw/skills/self-evo-agent/scripts/run-evals.py ~/.openclaw/skills/self-evo-agent
+python3 ~/.openclaw/skills/self-evo-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evo-agent
 ```
 
 更完整的安装说明见 [install.md](./install.md)。
@@ -241,6 +241,7 @@ clawhub install RangeKing/self-evo-agent
 ```
 
 安装后请重启一个新的 OpenClaw session，让它从 workspace 的 `skills/` 目录重新加载。
+Registry slug 和本地目录使用 `self-evo-agent`，但 skill 名和 hook 名仍然是 `self-evolving-agent`。
 如果你之前已经在用 `self-improving-agent`，建议先导入 `.learnings/`，再关闭旧 hook。
 
 ### 方式 B：让 OpenClaw 自己从 GitHub 下载并安装
@@ -248,7 +249,7 @@ clawhub install RangeKing/self-evo-agent
 如果你希望让 agent 自己从 GitHub 仓库拉取 skill，可以直接对 OpenClaw 说：
 
 ```text
-Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evolving-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
+Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evo-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
 ```
 
 这种方式适合把它作为共享 managed skill 安装到 `~/.openclaw/skills`。
@@ -256,14 +257,14 @@ Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent
 ### 方式 C：手动 Git clone
 
 ```bash
-git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evolving-agent
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evo-agent
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
 ```
 
 如果你已有 `~/.openclaw/workspace/.learnings`，推荐改用：
 
 ```bash
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh \
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh \
   ~/.openclaw/workspace/.evolution \
   --migrate-from ~/.openclaw/workspace/.learnings
 ```

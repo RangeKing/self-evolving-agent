@@ -130,7 +130,7 @@ This keeps prior experience intact without forcing a lossy one-shot conversion i
 Example:
 
 ```bash
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh \
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh \
   ~/.openclaw/workspace/.evolution \
   --migrate-from ~/.openclaw/workspace/.learnings
 openclaw hooks disable self-improvement
@@ -216,10 +216,10 @@ self-evolving-agent/
 5. Run the benchmark suite to see how the skill performs in model-in-the-loop conditions.
 
 ```bash
-cp -r self-evolving-agent ~/.openclaw/skills/
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
-python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-evals.py ~/.openclaw/skills/self-evolving-agent
-python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evolving-agent
+cp -r self-evolving-agent ~/.openclaw/skills/self-evo-agent
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+python3 ~/.openclaw/skills/self-evo-agent/scripts/run-evals.py ~/.openclaw/skills/self-evo-agent
+python3 ~/.openclaw/skills/self-evo-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evo-agent
 ```
 
 More setup details are in [install.md](./install.md).
@@ -239,6 +239,7 @@ clawhub install RangeKing/self-evo-agent
 ```
 
 Then start a new OpenClaw session so the skill is loaded from your workspace `skills/` folder.
+The registry slug and local directory are `self-evo-agent`; the skill and hook name stay `self-evolving-agent`.
 If you are migrating from `self-improving-agent`, import `.learnings/` before you disable the old hook.
 
 ### Option B: Let OpenClaw install it from GitHub
@@ -246,7 +247,7 @@ If you are migrating from `self-improving-agent`, import `.learnings/` before yo
 If you prefer to have your agent fetch the GitHub repository directly, you can tell OpenClaw something like:
 
 ```text
-Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evolving-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
+Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evo-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
 ```
 
 This works well when you want the skill installed as a shared managed skill under `~/.openclaw/skills`.
@@ -254,14 +255,14 @@ This works well when you want the skill installed as a shared managed skill unde
 ### Option C: Manual Git clone
 
 ```bash
-git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evolving-agent
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evo-agent
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
 ```
 
 If you already have `~/.openclaw/workspace/.learnings`, use:
 
 ```bash
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh \
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh \
   ~/.openclaw/workspace/.evolution \
   --migrate-from ~/.openclaw/workspace/.learnings
 ```

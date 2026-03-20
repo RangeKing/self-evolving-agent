@@ -16,6 +16,9 @@ clawhub install RangeKing/self-evo-agent
 
 OpenClaw will pick up the new workspace skill on the next session start.
 
+Registry slug and local install directory use `self-evo-agent`.
+The skill name and hook name remain `self-evolving-agent`.
+
 If you already use `self-improving-agent`, keep it installed for the moment. Migrate the old `.learnings/` history first, then disable the old hook so you do not get duplicate reminders.
 
 ### Option 2: Let OpenClaw fetch it from GitHub
@@ -23,7 +26,7 @@ If you already use `self-improving-agent`, keep it installed for the moment. Mig
 Ask your OpenClaw agent to install the repository directly into the shared skills directory:
 
 ```text
-Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evolving-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
+Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent into ~/.openclaw/skills/self-evo-agent, inspect the scripts before enabling hooks, and then bootstrap ~/.openclaw/workspace/.evolution.
 ```
 
 This is useful when you want OpenClaw itself to download and inspect the skill before use.
@@ -31,13 +34,13 @@ This is useful when you want OpenClaw itself to download and inspect the skill b
 ### Option 3: Copy into the skills directory
 
 ```bash
-cp -r self-evolving-agent ~/.openclaw/skills/
+cp -r self-evolving-agent ~/.openclaw/skills/self-evo-agent
 ```
 
 ### Option 4: Clone directly
 
 ```bash
-git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evolving-agent
+git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evo-agent
 ```
 
 ## Workspace Setup
@@ -51,13 +54,13 @@ mkdir -p ~/.openclaw/workspace/.evolution
 Seed the workspace ledgers with the bootstrap script:
 
 ```bash
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
 ```
 
 If you are migrating from `self-improving-agent`, import the legacy `.learnings/` directory at the same time:
 
 ```bash
-~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh \
+~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh \
   ~/.openclaw/workspace/.evolution \
   --migrate-from ~/.openclaw/workspace/.learnings
 ```
@@ -93,7 +96,7 @@ After import, verify `.evolution/legacy-self-improving/IMPORT_INDEX.md`.
 Copy the OpenClaw hook:
 
 ```bash
-cp -r ~/.openclaw/skills/self-evolving-agent/hooks/openclaw ~/.openclaw/hooks/self-evolving-agent
+cp -r ~/.openclaw/skills/self-evo-agent/hooks/openclaw ~/.openclaw/hooks/self-evolving-agent
 ```
 
 Enable it:
@@ -159,13 +162,13 @@ For familiar, low-consequence, short tasks, use the light loop instead:
 Run the repeatable local compliance suite:
 
 ```bash
-python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-evals.py ~/.openclaw/skills/self-evolving-agent
+python3 ~/.openclaw/skills/self-evo-agent/scripts/run-evals.py ~/.openclaw/skills/self-evo-agent
 ```
 
 Run the model-in-the-loop benchmark:
 
 ```bash
-python3 ~/.openclaw/skills/self-evolving-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evolving-agent
+python3 ~/.openclaw/skills/self-evo-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evo-agent
 ```
 
 ## Security Note

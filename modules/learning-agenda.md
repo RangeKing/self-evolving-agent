@@ -23,6 +23,8 @@ Run a learning agenda review when any condition is true:
 - a long-horizon or unfamiliar high-consequence task is starting
 - a capability just reached `passed` or `generalized` and may be retired from active focus
 
+Do not run a review cycle just because a trivial one-off mistake happened. Minor slips stay in the memory layer unless they reveal a reusable capability bottleneck.
+
 ## Prioritization Factors
 
 Score each candidate weakness on these dimensions:

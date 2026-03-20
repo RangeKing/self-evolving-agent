@@ -55,6 +55,7 @@ REQUIRED_FILES = [
     "scripts/activator.sh",
     "scripts/bootstrap-workspace.sh",
     "scripts/error-detector.sh",
+    "scripts/migrate-self-improving.py",
     "scripts/run-benchmark.py",
     "scripts/run-evals.py",
     "evals/evals.json",
@@ -208,6 +209,7 @@ def main() -> int:
             "recorded",
             "promoted",
             "Generate a training unit if weakness or recurrence is detected.",
+            "Default to the light loop first.",
         ],
     )
     checks.append(
@@ -225,6 +227,7 @@ def main() -> int:
             "Control Loop",
             "active learning agenda items",
             "Agenda Decision",
+            "Default to the light loop.",
         ],
     )
     checks.append(
@@ -313,6 +316,8 @@ def main() -> int:
             "README.zh-CN.md",
             "self-evolving-agent vs self-improving-agent",
             "Model-in-the-Loop Benchmark",
+            "Migration From self-improving-agent",
+            "Light Loop vs Full Loop",
         ],
     )
     checks.append(

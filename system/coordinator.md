@@ -104,6 +104,55 @@ If the agenda changes, update:
 - `assets/CAPABILITIES.md`
 - `assets/TRAINING_UNITS.md`
 
+## Effort Selection
+
+Default to the light loop. Spend full-loop tokens only when the task or evidence deserves it.
+
+### Light loop
+
+Use the light loop when all are true:
+
+- novelty is `familiar`
+- consequence is `low`
+- horizon is `short`
+- no active learning agenda item is central
+- no failure, near-miss, or user rescue suggests a reusable weakness
+- no training, evaluation, or promotion decision is needed
+
+Light-loop output:
+
+1. a short retrieval pass
+2. one risk and one verification check
+3. optional `log_only` update if the lesson is reusable
+
+### Full loop
+
+Run the full 10-step loop when any are true:
+
+- novelty is `mixed` or `unfamiliar`
+- consequence is `medium` or `high` and failure would matter
+- horizon is `medium` or `long`
+- an active agenda item is relevant
+- a pattern looks recurring, structural, or transfer-related
+- the task is deliberate practice, evaluation, or promotion work
+
+### Escalate mid-task
+
+Escalate from light to full if execution reveals:
+
+- non-trivial rework
+- a real defect caught by verification
+- user rescue or user redirection
+- a missed retrieval
+- evidence that the lesson may deserve training or promotion
+
+## Migration Layer
+
+If `.evolution/legacy-self-improving/` exists, treat it as a read-only legacy memory layer during retrieval.
+
+Use it to preserve past experience without forcing an immediate schema rewrite.
+Only normalize a legacy item into the new ledgers when it becomes active evidence for diagnosis, agenda review, evaluation, or promotion.
+
 ## Standard Workflow
 
 ### Step 1: Classify task
@@ -115,6 +164,7 @@ Classify the task on three axes:
 - horizon: short | medium | long
 
 If the task is `mixed` or `unfamiliar`, or has `high` consequence, force a pre-task diagnosis.
+If the task stays in light mode, keep the diagnosis to one risk, one mitigation, and one verification check.
 
 ### Step 2: Retrieve relevant memory
 
@@ -125,6 +175,7 @@ Retrieve:
 - matching capabilities
 - active learning agenda items
 - open training units
+- legacy self-improving logs when the migration layer exists
 
 Ask:
 
@@ -197,6 +248,8 @@ Create a training unit if any condition is true:
 - weakness blocked a high-value task
 - strategy was understood but not executable under pressure
 - the agent compensated through luck or user rescue
+
+Do not create a training unit for a one-off low-consequence slip that stayed incidental after verification.
 
 If the new unit changes what should be trained now, follow the protocol in `modules/learning-agenda.md`.
 
@@ -276,3 +329,8 @@ For each meaningful cycle, produce:
 4. `Training Decision`
 5. `Evaluation State`
 6. `Promotion Decision`
+
+For a light-loop cycle with no escalation, it is acceptable to produce only:
+
+1. `Task Diagnosis`
+2. `log_only` or `no durable update`

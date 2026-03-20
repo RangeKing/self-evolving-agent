@@ -113,6 +113,30 @@ flowchart TD
 
 这些能力都还在，但它们现在只是 **memory layer**，而不是整个系统。
 
+## 🔄 从 self-improving-agent 迁移
+
+最常见的冲突其实不是数据丢失，而是两套提醒同时生效。
+
+如果用户已经装过 `self-improving-agent`，推荐的无痛迁移路径是：
+
+1. 先安装 `self-evolving-agent`，不要急着删除旧 skill。
+2. 初始化 `.evolution/` 时，把旧的 `.learnings/` 一并导入。
+3. 把导入后的内容保存在 `.evolution/legacy-self-improving/`，作为只读历史层。
+4. 确认导入成功后，再关闭旧的 `self-improvement` hook。
+5. 只有当某条旧经验再次被检索到、进入 agenda、参与 evaluation 或 promotion 时，才逐步规范化到新 schema。
+
+这样可以保留旧经验，又不会为了“一次性转格式”引入有损迁移。
+
+示例：
+
+```bash
+~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh \
+  ~/.openclaw/workspace/.evolution \
+  --migrate-from ~/.openclaw/workspace/.learnings
+openclaw hooks disable self-improvement
+openclaw hooks enable self-evolving-agent
+```
+
 ## 🎯 最适用的场景
 
 如果你希望 agent：
@@ -124,6 +148,14 @@ flowchart TD
 - 先证明迁移，再沉淀长期策略
 
 那么这个 skill 就是为这种目标设计的。
+
+## ⚖️ 轻流程 vs 重流程
+
+完整能力进化闭环不应该为了每一个小失误都全量启动。
+
+当任务是熟悉的、低后果、短链路，而且没有暴露更深层能力短板时，优先走轻流程：只检索最相关的少量记忆，提前说清一个风险点和一个验证动作，完成任务后只记录那些明显可复用的经验。
+
+只有在任务陌生、后果较高、命中当前 agenda 重点、出现重复模式、用户不得不 rescue、迁移失败，或者这条经验已经值得进入 training / evaluation / promotion 时，才升级为完整重流程。
 
 ## 📁 仓库结构
 
@@ -209,6 +241,7 @@ clawhub install RangeKing/self-evo-agent
 ```
 
 安装后请重启一个新的 OpenClaw session，让它从 workspace 的 `skills/` 目录重新加载。
+如果你之前已经在用 `self-improving-agent`，建议先导入 `.learnings/`，再关闭旧 hook。
 
 ### 方式 B：让 OpenClaw 自己从 GitHub 下载并安装
 
@@ -225,6 +258,14 @@ Install the OpenClaw skill from https://github.com/RangeKing/self-evolving-agent
 ```bash
 git clone https://github.com/RangeKing/self-evolving-agent.git ~/.openclaw/skills/self-evolving-agent
 ~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+```
+
+如果你已有 `~/.openclaw/workspace/.learnings`，推荐改用：
+
+```bash
+~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh \
+  ~/.openclaw/workspace/.evolution \
+  --migrate-from ~/.openclaw/workspace/.learnings
 ```
 
 ### 安全提示

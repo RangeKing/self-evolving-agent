@@ -16,6 +16,8 @@ clawhub install RangeKing/self-evo-agent
 
 OpenClaw will pick up the new workspace skill on the next session start.
 
+If you already use `self-improving-agent`, keep it installed for the moment. Migrate the old `.learnings/` history first, then disable the old hook so you do not get duplicate reminders.
+
 ### Option 2: Let OpenClaw fetch it from GitHub
 
 Ask your OpenClaw agent to install the repository directly into the shared skills directory:
@@ -52,6 +54,22 @@ Seed the workspace ledgers with the bootstrap script:
 ~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
 ```
 
+If you are migrating from `self-improving-agent`, import the legacy `.learnings/` directory at the same time:
+
+```bash
+~/.openclaw/skills/self-evolving-agent/scripts/bootstrap-workspace.sh \
+  ~/.openclaw/workspace/.evolution \
+  --migrate-from ~/.openclaw/workspace/.learnings
+```
+
+This migration is lossless:
+
+- it copies the original `.learnings/` files into `.evolution/legacy-self-improving/`
+- it leaves the original files untouched
+- it avoids rewriting old entries into the new schema before they are needed
+
+After import, verify `.evolution/legacy-self-improving/IMPORT_INDEX.md`.
+
 ## Recommended Workspace Convention
 
 ```text
@@ -84,6 +102,12 @@ Enable it:
 openclaw hooks enable self-evolving-agent
 ```
 
+If you previously enabled the old hook, disable it after verifying the import:
+
+```bash
+openclaw hooks disable self-improvement
+```
+
 ## Optional Generic Agent Hooks
 
 If your agent environment supports shell hooks, you can use:
@@ -104,6 +128,8 @@ Only promote validated strategies into durable context:
 
 ## Minimum Operating Routine
 
+Default to the light loop. Only pay the cost of the full loop when the task or evidence warrants it.
+
 Before major tasks:
 
 1. Review `LEARNING_AGENDA` to see what the agent is actively training.
@@ -119,6 +145,14 @@ After major tasks:
 4. Create or update a training unit if recurrence appears.
 5. Record evaluation status.
 6. Promote only after validated transfer.
+
+For familiar, low-consequence, short tasks, use the light loop instead:
+
+1. Retrieve only the 1-3 most relevant prior items.
+2. Name one likely risk and one verification check.
+3. Do the work.
+4. Log only if the lesson is unusually reusable.
+5. Escalate into the full loop only if a real defect, user rescue, recurrence, or transfer-worthy lesson appears.
 
 ## Validation
 

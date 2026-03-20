@@ -1,6 +1,6 @@
 # Module: Reflection
 
-Use this module after meaningful work, especially if the task was novel, difficult, or error-prone.
+Use this module after meaningful work, especially if the task was novel, difficult, error-prone, or escalated into the full loop.
 
 ## Goal
 
@@ -63,6 +63,16 @@ Choose:
 - mark as promotion candidate
 - trigger agenda review if priorities should change
 
+## Quick Reflection For Light Loop
+
+When the task stayed familiar, low-consequence, and did not expose a deeper weakness, use this shorter pass:
+
+- state what happened in 1-2 sentences
+- state whether a reusable lesson exists
+- state whether any escalation trigger fired
+
+If no escalation trigger fired, stop at `log_only` or no durable update.
+
 ## Reflection Template
 
 ```markdown
@@ -95,3 +105,4 @@ log_only | training_unit | evaluation | promotion_candidate | agenda_review
 ## Reflection Standard
 
 If the reflection cannot produce a clear self-explanation, counterexample, and trigger signature, keep the lesson below `understood`.
+If the task never justified the full loop, do not force a synthetic counterexample or transfer scenario just to fill the template.

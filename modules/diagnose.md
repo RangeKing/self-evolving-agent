@@ -142,3 +142,11 @@ log_only | update_capability | create_training_unit | run_evaluation | consider_
 
 Escalate to a training unit when the diagnosis suggests a reusable weakness, not just a one-off accident.
 
+If the pattern is still `incidental`, the consequence was low, and verification contained the damage, prefer `log_only` or `update_capability` over the full training pipeline.
+
+Escalate from a light loop into the full loop when:
+
+- the same weakness appears again
+- the user had to rescue the task
+- the issue would have mattered under higher consequence
+- the lesson appears transferable enough to affect future policy

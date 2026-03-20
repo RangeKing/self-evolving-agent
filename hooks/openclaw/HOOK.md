@@ -10,8 +10,10 @@ This hook reminds the agent to think in capability-evolution terms, not only in 
 
 ## What It Injects
 
+- default to the light loop and escalate only when evidence justifies the full pipeline
 - inspect the active learning agenda
 - retrieve relevant prior learnings
+- inspect the legacy migration layer if it exists
 - inspect capability risks for the upcoming task
 - choose an execution strategy with a verification plan
 - after the task, diagnose weaknesses and decide whether training or evaluation is needed

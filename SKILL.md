@@ -17,6 +17,8 @@ Use this skill when any of the following is true:
 - A useful tactic might deserve promotion into long-term context, but has not been validated yet.
 - You want to understand not just what went wrong, but what the agent can do now, what it still cannot do, and what it should train next.
 
+Default to the light loop first. Escalate into the full capability-evolution loop only when the task or evidence justifies the extra cost.
+
 ## Core Principle
 
 Do not treat logging as learning.
@@ -69,6 +71,49 @@ Run the following loop, in order:
 9. Evaluate learning progress.
 10. Promote only validated strategies.
 
+## Effort Modes
+
+### Light loop
+
+Use the lightweight pass when all of the following are true:
+
+- The task is familiar.
+- Consequence is low.
+- Horizon is short.
+- No active agenda focus is central to the task.
+- No failure, near-miss, or user rescue exposed a deeper weakness.
+- No learning needs training, evaluation, or promotion.
+
+In the light loop:
+
+1. Retrieve only the most relevant 1-3 memory items.
+2. Name the single most likely risk and one verification check.
+3. Do the work.
+4. Log only unusually reusable lessons.
+5. Stop unless an escalation trigger fires.
+
+### Full loop
+
+Run the full loop when any of the following is true:
+
+- The task is mixed or unfamiliar.
+- Consequence is medium or high and failure would matter.
+- Horizon is medium or long with many dependencies.
+- An active agenda focus is relevant.
+- A failure, near-miss, or user correction suggests a reusable weakness.
+- A similar issue repeated, transfer failed, or promotion is under consideration.
+- The task itself is deliberate practice, evaluation, or promotion review.
+
+### Escalation triggers
+
+Escalate from light to full when any of the following appears during execution:
+
+- non-trivial rework
+- verification catches a real defect
+- the user had to rescue or redirect the task
+- a missed retrieval or repeated pattern appears
+- the learning looks broad enough to affect future policy
+
 ## Control Loop
 
 Outside the 10-step task loop, maintain an explicit learning agenda.
@@ -109,6 +154,13 @@ Assets and ledgers:
 - `assets/EVALUATIONS.md`
 
 ## Operating Rules
+
+### During migration from self-improving-agent
+
+- Treat `.evolution/legacy-self-improving/` as a read-only memory layer.
+- Search the legacy files during retrieval if they exist.
+- Do not bulk-convert every old entry into the new schema on day one.
+- Normalize a legacy learning into `.evolution` only when it is reused, agenda-worthy, or needed for evaluation.
 
 ### Before a substantial task
 

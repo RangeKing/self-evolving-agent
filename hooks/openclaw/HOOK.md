@@ -6,19 +6,17 @@ metadata: {"openclaw":{"emoji":"🧭","events":["agent:bootstrap"]}}
 
 # Self-Evolving Agent Hook
 
-This hook reminds the agent to think in capability-evolution terms, not only in incident-logging terms.
+This hook reminds the agent to use the phase-aware evolution runtime rather than treating `task_full` as always-on.
 
 ## What It Injects
 
-- default to the light loop and escalate only when evidence justifies the full pipeline
-- inspect the active learning agenda
-- retrieve relevant prior learnings
-- inspect the legacy migration layer if it exists
-- inspect capability risks for the upcoming task
-- choose an execution strategy with a verification plan
-- after the task, diagnose weaknesses and decide whether training or evaluation is needed
-- refresh the learning agenda if priorities changed
-- track progress through the evaluation ladder (`recorded` -> `promoted`)
+- classify the task first
+- choose exactly one mode: `task_light`, `task_full`, `agenda_review`, or `promotion_review`
+- retrieve only the records required for that mode
+- inspect the legacy migration layer as read-only evidence when it exists
+- write new evidence through `scripts/evolution_runtime.py record-incident`
+- regenerate ledgers and the manifest through the runtime, not by manual ledger edits
+- run agenda review and evaluation only when their triggers fire
 - promote only validated, transferable strategies
 
 ## Enable

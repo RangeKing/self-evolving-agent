@@ -1,15 +1,18 @@
-# Learning Agenda
-
-Generated view of canonical agenda records.
-
-Generated from canonical records on 2026-03-31T13:14:27Z.
-
-## [AGD-BOOTSTRAP-001] bootstrap-agenda
-
-**Reviewed**: 2026-03-18T00:00:00Z
-**Review Trigger**: first_install
-**Status**: active
-**Next Review Trigger**: after_5_cycles
+---
+id: "AGD-BOOTSTRAP-001"
+type: "agenda"
+title: "bootstrap-agenda"
+created_at: "2026-03-18T00:00:00Z"
+updated_at: "2026-03-18T00:00:00Z"
+tags: ["bootstrap", "agenda"]
+linked_records: ["CAP-BOOTSTRAP-004", "CAP-BOOTSTRAP-008", "CAP-BOOTSTRAP-009"]
+trigger_signature: "after five meaningful cycles, structural gap, unfamiliar project"
+reviewed_at: "2026-03-18T00:00:00Z"
+review_trigger: "first_install"
+status: "active"
+next_review_trigger: "after_5_cycles"
+active_focus: ["verification", "execution discipline", "memory retrieval"]
+---
 
 ### Active Focus
 1. verification
@@ -41,5 +44,3 @@ These three focuses are upstream leverage points for stable behavior on unfamili
 - verification: watch for transfer after the first passed training unit.
 - execution discipline: keep active until the loop becomes self-enforcing.
 - memory retrieval: keep active until retrieval becomes timely under `task_light`-level similarity.
-
----

@@ -122,6 +122,7 @@ def build_candidate_prompt(skill_name: str, scenario: Scenario) -> str:
         [
             f"You are being benchmarked on the local skill `${skill_name}`.",
             f"Use `${skill_name}` faithfully for this scenario.",
+            "Honor the skill's phase-aware routing behavior and keep to the smallest safe mode unless the scenario justifies escalation.",
             "Respond only with the final answer to the user.",
             "Do not mention benchmark internals, hidden rubrics, or grading.",
             "",
@@ -191,6 +192,7 @@ def render_markdown_report(run_dir: Path, suite: dict, results: list[dict]) -> N
         "## Summary",
         "",
         f"- Passed {passed}/{total} scenarios",
+        f"- Scenario ids: {', '.join(item['id'] for item in results)}",
     ]
 
     for item in results:

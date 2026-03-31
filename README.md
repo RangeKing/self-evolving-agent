@@ -13,7 +13,7 @@
 
 🧠 self-improving-agent only log mistakes.
 
-`self-evolving-agent` is an OpenClaw-first skill that turns passive self-improvement into a full capability evolution loop: diagnose gaps, set learning priorities, generate training units, evaluate progress, verify transfer, and only then promote durable strategies.
+`self-evolving-agent` is an OpenClaw-first, phase-aware capability-evolution runtime. It classifies work into `task_light`, `task_full`, `agenda_review`, or `promotion_review` mode; retrieves only the most relevant prior records; writes evidence into canonical records; and regenerates human-facing ledgers plus `manifest.json`.
 
 It preserves the best parts of [`self-improving-agent`](https://github.com/peterskoett/self-improving-agent), but upgrades the paradigm from:
 
@@ -58,6 +58,8 @@ That helps reduce repeated mistakes, but it does not answer the harder questions
 
 - 🧭 **Learning agenda:** keeps only 1-3 high-leverage capabilities active at a time
 - 🗺️ **Capability map:** tracks level, evidence, limits, failure modes, and upgrade conditions
+- 🧠 **Phase-aware control plane:** routes tasks into the smallest safe mode instead of assuming `task_full` every time
+- 🗂️ **Canonical records:** stores mutable state under `records/` and generates human-readable ledgers from those records
 - 🔬 **Diagnosis layer:** turns incidents into capability-level root-cause analysis
 - 🏋️ **Curriculum layer:** generates drills, pass criteria, and transfer scenarios
 - ✅ **Evaluation ladder:** separates writing something down from actually learning it
@@ -68,38 +70,30 @@ That helps reduce repeated mistakes, but it does not answer the harder questions
 
 ```mermaid
 flowchart TD
-    A["Task Starts"] --> B["Retrieve Memory"]
-    B --> C["Pre-Task Risk Diagnosis"]
-    C --> D["Choose Execution Strategy"]
-    D --> E["Perform Task"]
-    E --> F["Post-Task Reflection"]
-    F --> G["Capability Update"]
-    G --> H["Training Decision"]
-    H --> I["Evaluation State Update"]
-    I --> J["Promotion Decision"]
-
-    K["Learning Agenda Review"] --> B
-    K --> G
-    H --> K
-    I --> K
+    A["Task Starts"] --> B["classify-task"]
+    B --> C["Mode: task_light | task_full | agenda_review | promotion_review"]
+    C --> D["retrieve-context"]
+    D --> E["Execute with verification"]
+    E --> F["record-incident"]
+    F --> G["rebuild-index"]
+    G --> H["Generated ledgers + manifest.json"]
+    H --> I["review-agenda / evaluate when triggered"]
 ```
 
-## 🔁 Closed Loop
+The runtime entrypoint is [`scripts/evolution_runtime.py`](./scripts/evolution_runtime.py). It treats `assets/records/` and workspace `records/` directories as the mutable source of truth and regenerates summaries plus `index/manifest.json`.
 
-For every meaningful cycle, the skill runs this loop:
+## 🔁 Phase-Aware Loop
 
-1. Classify the task
-2. Retrieve relevant learnings and capabilities
-3. Run a pre-task risk diagnosis
-4. Choose an execution strategy
-5. Perform the task
-6. Reflect after completion
-7. Update the capability map
-8. Generate or revise training
-9. Evaluate learning progress
-10. Promote only validated strategies
+For every meaningful cycle, the skill follows this control plane:
 
-Outside the task loop, it also runs a **learning agenda review** when priorities should change.
+1. Classify the task with `scripts/evolution_runtime.py classify-task`
+2. Choose the smallest safe mode
+3. Retrieve only that mode's records with `retrieve-context`
+4. Execute with a mode-appropriate verification plan
+5. Write reusable evidence through `record-incident`
+6. Regenerate `records/` views and `manifest.json` through `rebuild-index`
+
+Outside the task loop, it runs `review-agenda` and `evaluate` only when their triggers fire.
 
 ## 🧩 What It Keeps From self-improving-agent
 
@@ -147,13 +141,17 @@ Use this skill when you want an agent that should:
 - distinguish recording from mastery
 - prove transfer before promotion
 
-## ⚖️ Light Loop vs Full Loop
+## ⚖️ Modes
 
-The full capability-evolution pipeline is intentionally not the default for every tiny mistake.
+The `task_full` capability-evolution pipeline is intentionally not the default for every tiny mistake.
 
-Use the light loop when the task is familiar, low-consequence, short-horizon, and no deeper weakness appeared. In that mode, retrieve only the top few relevant memories, state one risk and one verification check, do the work, and log only unusually reusable lessons.
+Use `task_light` when the task is familiar, low-consequence, and short-horizon. In that mode, retrieve only the top few relevant records, state one risk and one verification check, and avoid spawning agenda or promotion work.
 
-Escalate into the full loop when the task is mixed or unfamiliar, consequence matters, an active agenda item is involved, a failure pattern repeats, the user had to rescue the task, transfer failed, or the lesson may deserve training, evaluation, or promotion.
+Escalate into `task_full` when the task is mixed or unfamiliar, consequence matters, an active agenda item is involved, a failure pattern repeats, the user had to rescue the task, transfer failed, or the lesson may deserve training or evaluation.
+
+Use `agenda_review` only for agenda triggers such as five meaningful cycles, structural gaps, failed transfer, or an upcoming unfamiliar project.
+
+Use `promotion_review` only for transfer and promotion decisions.
 
 ## 📁 Repository Layout
 
@@ -180,6 +178,9 @@ self-evolving-agent/
 │   ├── promotion.md
 │   └── reflection.md
 ├── assets/
+│   ├── records/
+│   │   ├── agenda/
+│   │   └── capabilities/
 │   ├── CAPABILITIES.md
 │   ├── ERRORS.md
 │   ├── EVALUATIONS.md
@@ -202,6 +203,7 @@ self-evolving-agent/
 └── scripts/
     ├── activator.sh
     ├── bootstrap-workspace.sh
+    ├── evolution_runtime.py
     ├── error-detector.sh
     ├── run-benchmark.py
     └── run-evals.py
@@ -211,13 +213,16 @@ self-evolving-agent/
 
 1. Install the skill into your OpenClaw skills directory.
 2. Bootstrap a persistent `.evolution` workspace.
-3. Review the learning agenda before difficult tasks.
-4. Let the task loop update memory, diagnosis, training, and evaluation artifacts.
+3. Classify work through the runtime and retrieve only the required records.
+4. Let the runtime regenerate ledgers and `manifest.json` after canonical record updates.
 5. Run the benchmark suite to see how the skill performs in model-in-the-loop conditions.
 
 ```bash
 cp -r self-evolving-agent ~/.openclaw/skills/self-evo-agent
 ~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+python3 ~/.openclaw/skills/self-evo-agent/scripts/evolution_runtime.py classify-task \
+  --workspace ~/.openclaw/workspace/.evolution \
+  --prompt "I need to modify a production deployment workflow I have never touched before."
 python3 ~/.openclaw/skills/self-evo-agent/scripts/run-evals.py ~/.openclaw/skills/self-evo-agent
 python3 ~/.openclaw/skills/self-evo-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evo-agent
 ```

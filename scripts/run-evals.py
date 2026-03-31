@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Repeatable local compliance checks for the self-evolving-agent skill.
+Repeatable local compliance checks for the self-evolving-agent runtime.
 """
 
 from __future__ import annotations
@@ -9,6 +9,7 @@ import json
 import re
 import subprocess
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -38,23 +39,21 @@ REQUIRED_FILES = [
     "modules/evaluator.md",
     "modules/promotion.md",
     "modules/reflection.md",
-    "assets/LEARNINGS.md",
-    "assets/ERRORS.md",
-    "assets/FEATURE_REQUESTS.md",
     "assets/CAPABILITIES.md",
+    "assets/ERRORS.md",
+    "assets/EVALUATIONS.md",
+    "assets/FEATURE_REQUESTS.md",
+    "assets/LEARNINGS.md",
     "assets/LEARNING_AGENDA.md",
     "assets/TRAINING_UNITS.md",
-    "assets/EVALUATIONS.md",
-    "demos/demo-1-diagnosis.md",
-    "demos/demo-2-training-loop.md",
-    "demos/demo-3-promotion-and-transfer.md",
-    "demos/demo-4-agenda-review.md",
-    "demos/demo-5-pre-task-risk-diagnosis.md",
+    "assets/records/capabilities/cap-bootstrap-004-verification.md",
+    "assets/records/agenda/agd-bootstrap-001-bootstrap-agenda.md",
     "hooks/openclaw/HOOK.md",
     "hooks/openclaw/handler.ts",
     "scripts/activator.sh",
     "scripts/bootstrap-workspace.sh",
     "scripts/error-detector.sh",
+    "scripts/evolution_runtime.py",
     "scripts/migrate-self-improving.py",
     "scripts/run-benchmark.py",
     "scripts/run-evals.py",
@@ -108,7 +107,6 @@ def local_quick_validate(skill_dir: Path) -> tuple[bool, str]:
         return False, "Invalid frontmatter format"
 
     frontmatter_text = match.group(1)
-
     frontmatter, parse_error = parse_frontmatter_minimal(frontmatter_text)
     if parse_error:
         return False, parse_error
@@ -125,15 +123,9 @@ def local_quick_validate(skill_dir: Path) -> tuple[bool, str]:
             f"Unexpected key(s) in SKILL.md frontmatter: {unexpected}. Allowed properties are: {allowed}",
         )
 
-    if "name" not in frontmatter:
+    name = str(frontmatter.get("name", "")).strip()
+    if not name:
         return False, "Missing 'name' in frontmatter"
-    if "description" not in frontmatter:
-        return False, "Missing 'description' in frontmatter"
-
-    name = frontmatter.get("name", "")
-    if not isinstance(name, str):
-        return False, f"Name must be a string, got {type(name).__name__}"
-    name = name.strip()
     if not re.match(r"^[a-z0-9-]+$", name):
         return False, f"Name '{name}' should be hyphen-case"
     if name.startswith("-") or name.endswith("-") or "--" in name:
@@ -141,10 +133,9 @@ def local_quick_validate(skill_dir: Path) -> tuple[bool, str]:
     if len(name) > MAX_SKILL_NAME_LENGTH:
         return False, f"Name is too long ({len(name)} characters). Maximum is {MAX_SKILL_NAME_LENGTH}."
 
-    description = frontmatter.get("description", "")
-    if not isinstance(description, str):
-        return False, f"Description must be a string, got {type(description).__name__}"
-    description = description.strip()
+    description = str(frontmatter.get("description", "")).strip()
+    if not description:
+        return False, "Missing 'description' in frontmatter"
     if "<" in description or ">" in description:
         return False, "Description cannot contain angle brackets (< or >)"
     if len(description) > 1024:
@@ -179,14 +170,23 @@ def require_text(path: Path, needles: list[str]) -> tuple[bool, list[str]]:
     return not missing, missing
 
 
-def count_bootstrap_capabilities(path: Path) -> int:
-    content = path.read_text()
-    return content.count("## [CAP-BOOTSTRAP-")
+def run_command(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=False)
+
+
+def run_json(cmd: list[str], cwd: Path) -> tuple[bool, dict | list | None, str]:
+    proc = run_command(cmd, cwd)
+    output = (proc.stdout or proc.stderr).strip()
+    if proc.returncode != 0:
+        return False, None, output
+    try:
+        return True, json.loads(proc.stdout), output
+    except json.JSONDecodeError as exc:
+        return False, None, f"{output}\nJSON decode error: {exc}"
 
 
 def main() -> int:
-    skill_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else Path.cwd()
-
+    skill_dir = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path.cwd().resolve()
     checks: list[tuple[str, bool, str]] = []
 
     valid, message = run_quick_validate(skill_dir)
@@ -204,17 +204,17 @@ def main() -> int:
     skill_ok, skill_missing = require_text(
         skill_dir / "SKILL.md",
         [
-            "Control Loop",
-            "learning agenda",
-            "recorded",
-            "promoted",
-            "Generate a training unit if weakness or recurrence is detected.",
-            "Default to the light loop first.",
+            "task_light",
+            "task_full",
+            "agenda_review",
+            "promotion_review",
+            "scripts/evolution_runtime.py",
+            "generated dashboards",
         ],
     )
     checks.append(
         (
-            "skill orchestration contract",
+            "phase-aware skill contract",
             skill_ok,
             "complete" if skill_ok else f"missing text: {', '.join(skill_missing)}",
         )
@@ -223,125 +223,297 @@ def main() -> int:
     coordinator_ok, coordinator_missing = require_text(
         skill_dir / "system/coordinator.md",
         [
-            "Layer 0: Learning Agenda",
-            "Control Loop",
-            "active learning agenda items",
-            "Agenda Decision",
-            "Default to the light loop.",
+            "Mode Contract",
+            "task_light",
+            "task_full",
+            "agenda_review",
+            "promotion_review",
+            "Canonical Workspace",
         ],
     )
     checks.append(
         (
-            "coordinator control loop",
+            "coordinator mode gates",
             coordinator_ok,
             "complete" if coordinator_ok else f"missing text: {', '.join(coordinator_missing)}",
         )
     )
 
-    capability_count = count_bootstrap_capabilities(skill_dir / "assets/CAPABILITIES.md")
+    readme_ok, readme_missing = require_text(
+        skill_dir / "README.md",
+        [
+            "phase-aware",
+            "evolution_runtime.py",
+            "records/",
+            "manifest.json",
+        ],
+    )
     checks.append(
         (
-            "seeded capability baseline",
-            capability_count >= 10,
-            f"{capability_count} bootstrap capability entries",
+            "runtime README coverage",
+            readme_ok,
+            "complete" if readme_ok else f"missing text: {', '.join(readme_missing)}",
         )
     )
 
-    agenda_ok, agenda_missing = require_text(
-        skill_dir / "assets/LEARNING_AGENDA.md",
-        ["### Active Focus", "verification", "execution discipline", "memory retrieval"],
+    install_ok, install_missing = require_text(
+        skill_dir / "install.md",
+        [
+            "Canonical records",
+            "manifest.json",
+            "evolution_runtime.py rebuild-index",
+        ],
     )
     checks.append(
         (
-            "bootstrap learning agenda",
-            agenda_ok,
-            "complete" if agenda_ok else f"missing text: {', '.join(agenda_missing)}",
+            "install guide coverage",
+            install_ok,
+            "complete" if install_ok else f"missing text: {', '.join(install_missing)}",
         )
     )
+
+    with tempfile.TemporaryDirectory(prefix="self-evo-evals-") as tmpdir_raw:
+        tmpdir = Path(tmpdir_raw)
+        workspace = tmpdir / ".evolution"
+        legacy = tmpdir / ".learnings"
+        legacy.mkdir()
+        (legacy / "LEARNINGS.md").write_text("# Legacy Learnings\n\n- verify contracts before guessing flags\n")
+
+        bootstrap = run_command(
+            [str(skill_dir / "scripts/bootstrap-workspace.sh"), str(workspace), "--migrate-from", str(legacy)],
+            skill_dir,
+        )
+        bootstrap_ok = bootstrap.returncode == 0
+        bootstrap_detail = bootstrap.stdout.strip() or bootstrap.stderr.strip()
+        checks.append(("bootstrap workspace", bootstrap_ok, bootstrap_detail))
+
+        manifest_path = workspace / "index/manifest.json"
+        manifest_ok = manifest_path.exists()
+        manifest = json.loads(manifest_path.read_text()) if manifest_ok else {}
+        checks.append(
+            (
+                "manifest generation",
+                manifest_ok and manifest.get("record_count", 0) >= 11,
+                f"record_count={manifest.get('record_count', 0)}",
+            )
+        )
+
+        dirs_ok = all(
+            (workspace / rel).is_dir()
+            for rel in [
+                "records/learnings",
+                "records/errors",
+                "records/feature_requests",
+                "records/capabilities",
+                "records/training_units",
+                "records/evaluations",
+                "records/agenda",
+            ]
+        )
+        checks.append(("canonical record layout", dirs_ok, "all record directories present" if dirs_ok else "missing record directory"))
+
+        classify_light_ok, classify_light, classify_light_detail = run_json(
+            [
+                sys.executable,
+                str(skill_dir / "scripts/evolution_runtime.py"),
+                "classify-task",
+                "--workspace",
+                str(workspace),
+                "--prompt",
+                "Update a familiar README sentence and verify the wording before sending it.",
+            ],
+            skill_dir,
+        )
+        checks.append(
+            (
+                "task_light mode classification",
+                classify_light_ok and isinstance(classify_light, dict) and classify_light.get("mode") == "task_light",
+                classify_light_detail,
+            )
+        )
+
+        classify_full_ok, classify_full, classify_full_detail = run_json(
+            [
+                sys.executable,
+                str(skill_dir / "scripts/evolution_runtime.py"),
+                "classify-task",
+                "--workspace",
+                str(workspace),
+                "--prompt",
+                "I need to modify a production deployment workflow I have never touched before.",
+            ],
+            skill_dir,
+        )
+        checks.append(
+            (
+                "task_full mode classification",
+                classify_full_ok and isinstance(classify_full, dict) and classify_full.get("mode") == "task_full",
+                classify_full_detail,
+            )
+        )
+
+        classify_agenda_ok, classify_agenda, classify_agenda_detail = run_json(
+            [
+                sys.executable,
+                str(skill_dir / "scripts/evolution_runtime.py"),
+                "classify-task",
+                "--workspace",
+                str(workspace),
+                "--prompt",
+                "I have completed five meaningful task cycles and need a learning agenda review before the next unfamiliar project.",
+            ],
+            skill_dir,
+        )
+        checks.append(
+            (
+                "agenda review classification",
+                classify_agenda_ok and isinstance(classify_agenda, dict) and classify_agenda.get("mode") == "agenda_review",
+                classify_agenda_detail,
+            )
+        )
+
+        classify_promo_ok, classify_promo, classify_promo_detail = run_json(
+            [
+                sys.executable,
+                str(skill_dir / "scripts/evolution_runtime.py"),
+                "classify-task",
+                "--workspace",
+                str(workspace),
+                "--prompt",
+                "A trained verification-first strategy transferred to a new release automation task. Evaluate whether it should be promoted.",
+            ],
+            skill_dir,
+        )
+        checks.append(
+            (
+                "promotion review classification",
+                classify_promo_ok and isinstance(classify_promo, dict) and classify_promo.get("mode") == "promotion_review",
+                classify_promo_detail,
+            )
+        )
+
+        retrieve_ok, retrieve_data, retrieve_detail = run_json(
+            [
+                sys.executable,
+                str(skill_dir / "scripts/evolution_runtime.py"),
+                "retrieve-context",
+                "--workspace",
+                str(workspace),
+                "--mode",
+                "task_light",
+                "--prompt",
+                "verification and retrieval check for a familiar edit",
+            ],
+            skill_dir,
+        )
+        retrieve_pass = (
+            retrieve_ok
+            and isinstance(retrieve_data, dict)
+            and retrieve_data.get("record_count", 99) <= 3
+        )
+        checks.append(("selective task_light retrieval", retrieve_pass, retrieve_detail))
+
+        record_ok, record_data, record_detail = run_json(
+            [
+                sys.executable,
+                str(skill_dir / "scripts/evolution_runtime.py"),
+                "record-incident",
+                "--workspace",
+                str(workspace),
+                "--source",
+                "error",
+                "--title",
+                "guessed-release-flag",
+                "--summary",
+                "Guessed a release flag instead of validating the command contract.",
+                "--capability",
+                "verification",
+                "--trigger-signature",
+                "unknown CLI flag on release workflows",
+                "--prompt-text",
+                "Edited a release command by guessing a flag name and the user corrected it.",
+                "--linked-record",
+                "CAP-BOOTSTRAP-004",
+            ],
+            skill_dir,
+        )
+        record_pass = record_ok and isinstance(record_data, dict) and str(record_data.get("record_id", "")).startswith("ERR-")
+        checks.append(("record incident writes canonical evidence", record_pass, record_detail))
+
+        manifest_after = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
+        checks.append(
+            (
+                "manifest refresh after write",
+                manifest_after.get("record_count", 0) >= manifest.get("record_count", 0) + 1,
+                f"record_count={manifest_after.get('record_count', 0)}",
+            )
+        )
+
+        agenda_ok, agenda_data, agenda_detail = run_json(
+            [
+                sys.executable,
+                str(skill_dir / "scripts/evolution_runtime.py"),
+                "review-agenda",
+                "--workspace",
+                str(workspace),
+            ],
+            skill_dir,
+        )
+        agenda_focus = agenda_data.get("active_focus", []) if isinstance(agenda_data, dict) else []
+        checks.append(
+            (
+                "agenda review output",
+                agenda_ok and 1 <= len(agenda_focus) <= 3,
+                agenda_detail,
+            )
+        )
+
+        evaluate_ok, evaluate_data, evaluate_detail = run_json(
+            [
+                sys.executable,
+                str(skill_dir / "scripts/evolution_runtime.py"),
+                "evaluate",
+                "--workspace",
+                str(workspace),
+                "--subject",
+                "CAP-BOOTSTRAP-004",
+            ],
+            skill_dir,
+        )
+        checks.append(
+            (
+                "evaluation output",
+                evaluate_ok and isinstance(evaluate_data, dict) and "promotion_ready" in evaluate_data,
+                evaluate_detail,
+            )
+        )
+
+        legacy_index = workspace / "legacy-self-improving/IMPORT_INDEX.md"
+        checks.append(
+            (
+                "legacy migration compatibility",
+                legacy_index.exists(),
+                "legacy import index present" if legacy_index.exists() else "missing legacy import index",
+            )
+        )
 
     evals = json.loads((skill_dir / "evals/evals.json").read_text())
-    eval_count = len(evals.get("evals", []))
+    eval_ids = {str(item["id"]) for item in evals.get("evals", [])}
     checks.append(
         (
             "eval scenario coverage",
-            eval_count >= 4,
-            f"{eval_count} eval scenarios",
+            {"task-light-restraint", "missed-retrieval-recovery", "pre-task-risk-diagnosis"}.issubset(eval_ids),
+            ", ".join(sorted(eval_ids)),
         )
     )
 
-    demo_ok, demo_missing = require_text(
-        skill_dir / "demos/demo-4-agenda-review.md",
-        ["## Skill Output", "Learning Agenda", "Active Focus"],
-    )
-    checks.append(
-        (
-            "proactive agenda demo",
-            demo_ok,
-            "complete" if demo_ok else f"missing text: {', '.join(demo_missing)}",
-        )
-    )
-
-    hook_ok, hook_missing = require_text(
-        skill_dir / "hooks/openclaw/handler.ts",
-        ["learning agenda", "refresh the learning agenda if priorities changed"],
-    )
-    checks.append(
-        (
-            "hook reminder coverage",
-            hook_ok,
-            "complete" if hook_ok else f"missing text: {', '.join(hook_missing)}",
-        )
-    )
-
-    benchmark_ok, benchmark_missing = require_text(
-        skill_dir / "benchmarks/suite.json",
-        [
-            "pre-task-risk-diagnosis",
-            "post-task-diagnosis-and-training",
-            "evaluation-and-promotion",
-            "agenda-review",
-        ],
-    )
+    suite = json.loads((skill_dir / "benchmarks/suite.json").read_text())
+    scenario_ids = {item["id"] for item in suite.get("scenarios", [])}
     checks.append(
         (
             "benchmark scenario suite",
-            benchmark_ok,
-            "complete" if benchmark_ok else f"missing text: {', '.join(benchmark_missing)}",
-        )
-    )
-
-    bilingual_ok, bilingual_missing = require_text(
-        skill_dir / "README.md",
-        [
-            "README.zh-CN.md",
-            "self-evolving-agent vs self-improving-agent",
-            "Model-in-the-Loop Benchmark",
-            "Migration From self-improving-agent",
-            "Light Loop vs Full Loop",
-        ],
-    )
-    checks.append(
-        (
-            "bilingual project README",
-            bilingual_ok,
-            "complete" if bilingual_ok else f"missing text: {', '.join(bilingual_missing)}",
-        )
-    )
-
-    governance_ok, governance_missing = require_text(
-        skill_dir / "README.md",
-        [
-            "Project Health",
-            "CONTRIBUTING.md",
-            "CHANGELOG.md",
-            "SECURITY.md",
-        ],
-    )
-    checks.append(
-        (
-            "repository governance links",
-            governance_ok,
-            "complete" if governance_ok else f"missing text: {', '.join(governance_missing)}",
+            {"task-light-restraint", "missed-retrieval-recovery", "agenda-review", "evaluation-and-promotion"}.issubset(scenario_ids),
+            ", ".join(sorted(scenario_ids)),
         )
     )
 

@@ -1,6 +1,6 @@
 # Module: Reflection
 
-Use this module after meaningful work, especially if the task was novel, difficult, error-prone, or escalated into the full loop.
+Use this module after meaningful work, especially if the task was novel, difficult, error-prone, or escalated into `task_full`.
 
 ## Goal
 
@@ -105,4 +105,4 @@ log_only | training_unit | evaluation | promotion_candidate | agenda_review
 ## Reflection Standard
 
 If the reflection cannot produce a clear self-explanation, counterexample, and trigger signature, keep the lesson below `understood`.
-If the task never justified the full loop, do not force a synthetic counterexample or transfer scenario just to fill the template.
+If the task never justified `task_full`, do not force a synthetic counterexample or transfer scenario just to fill the template.

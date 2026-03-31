@@ -1,22 +1,23 @@
 const reminder = `
 <self-evolving-agent-reminder>
-Before substantial work:
-- default to the light loop and escalate only if the task or evidence justifies it
-- check whether the learning agenda needs review
-- inspect the active learning agenda
-- retrieve relevant learnings and capability risks
-- identify the likely weakest link
-- choose an execution strategy with a verification plan
-- if a legacy migration folder exists, search it as read-only evidence
+Use the phase-aware runtime, not the whole loop by default.
 
-After substantial work:
-- log incidents and lessons
-- diagnose the weakest capability involved
-- keep minor incidental slips in the light loop
-- refresh the learning agenda if priorities changed
-- create a training unit if the weakness is recurring or high-leverage
-- evaluate progress using recorded -> understood -> practiced -> passed -> generalized -> promoted
-- promote only validated, transferable strategies
+Before substantial work:
+- classify first with scripts/evolution_runtime.py classify-task
+- choose exactly one mode: task_light, task_full, agenda_review, or promotion_review
+- retrieve only that mode's context with scripts/evolution_runtime.py retrieve-context
+- if legacy-self-improving exists, treat it as read-only evidence during retrieval
+
+While executing:
+- keep task_light small unless a real defect, user rescue, recurrence, or high-consequence unknown forces escalation
+- reserve agenda_review for explicit review triggers
+- reserve promotion_review for transfer or promotion decisions
+
+After meaningful work:
+- write evidence through scripts/evolution_runtime.py record-incident
+- rebuild summaries through the runtime, not by editing ledgers directly
+- run scripts/evolution_runtime.py review-agenda only when triggers fire
+- run scripts/evolution_runtime.py evaluate only when state advancement or promotion readiness is in question
 </self-evolving-agent-reminder>
 `.trim();
 

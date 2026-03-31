@@ -1,8 +1,8 @@
 # Capability Map
 
-Use this ledger as the agent's current capability state, not as a history dump.
+Generated view of canonical capability records.
 
-These bootstrap entries are conservative starting assumptions for a general coding agent. Replace them with evidence as soon as meaningful task history accumulates.
+Generated from canonical records on 2026-03-31T13:14:27Z.
 
 ## [CAP-BOOTSTRAP-001] research
 
@@ -30,9 +30,6 @@ Compare at least two plausible explanations on ambiguous or high-stakes tasks.
 
 ### Upgrade Condition
 Show repeated source-quality judgment and transfer across unfamiliar domains without extra prompting.
-
-### Linked Records
-- AGD-BOOTSTRAP-001
 
 ---
 
@@ -63,9 +60,6 @@ Create checkpointed plans before unfamiliar or multi-output work.
 ### Upgrade Condition
 Demonstrate repeated plan-first execution on complex tasks with reduced rework.
 
-### Linked Records
-- AGD-BOOTSTRAP-001
-
 ---
 
 ## [CAP-BOOTSTRAP-003] tool-use
@@ -94,9 +88,6 @@ Inspect tool output before moving to the next step on unfamiliar commands.
 
 ### Upgrade Condition
 Handle unfamiliar tooling with explicit contract checks and low rework across multiple tasks.
-
-### Linked Records
-- AGD-BOOTSTRAP-001
 
 ---
 
@@ -128,9 +119,6 @@ Design checks before delivery and look for failure cases, not only confirmation.
 ### Upgrade Condition
 Complete repeated unfamiliar tasks with explicit pre-delivery checks and no rescue-driven corrections.
 
-### Linked Records
-- AGD-BOOTSTRAP-001
-
 ---
 
 ## [CAP-BOOTSTRAP-005] synthesis
@@ -159,9 +147,6 @@ Separate facts, inferences, and open questions in ambiguous situations.
 
 ### Upgrade Condition
 Sustain high-quality synthesis across mixed-evidence tasks without overclaiming.
-
-### Linked Records
-- AGD-BOOTSTRAP-001
 
 ---
 
@@ -192,9 +177,6 @@ Front-load the user's output contract and decision need before drafting.
 ### Upgrade Condition
 Meet varied output constraints consistently with minimal revision across unfamiliar tasks.
 
-### Linked Records
-- AGD-BOOTSTRAP-001
-
 ---
 
 ## [CAP-BOOTSTRAP-007] coding
@@ -224,9 +206,6 @@ Pair every nontrivial implementation with a verification surface and regression 
 ### Upgrade Condition
 Deliver repeated multi-file changes with good validation and low backtracking.
 
-### Linked Records
-- AGD-BOOTSTRAP-001
-
 ---
 
 ## [CAP-BOOTSTRAP-008] execution discipline
@@ -254,10 +233,7 @@ May skip parts of the intended workflow under momentum, especially planning and 
 Apply the chosen workflow consistently from planning through verification.
 
 ### Upgrade Condition
-Show repeated independent adherence to the full loop on complex tasks.
-
-### Linked Records
-- AGD-BOOTSTRAP-001
+Show repeated independent adherence to `task_full` on complex tasks.
 
 ---
 
@@ -288,9 +264,6 @@ Strengthen trigger signatures and rehearse retrieval on adjacent scenarios.
 ### Upgrade Condition
 Show timely reuse of prior learnings across multiple similar-but-not-identical tasks.
 
-### Linked Records
-- AGD-BOOTSTRAP-001
-
 ---
 
 ## [CAP-BOOTSTRAP-010] long-horizon task handling
@@ -320,5 +293,4 @@ Track goals, state, and exit criteria explicitly during long-horizon work.
 ### Upgrade Condition
 Complete multi-step efforts with stable context, visible progress tracking, and low drift.
 
-### Linked Records
-- AGD-BOOTSTRAP-001
+---

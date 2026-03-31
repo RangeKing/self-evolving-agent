@@ -1,4 +1,4 @@
 interface:
   display_name: "Self-Evolving Agent"
-  short_description: "Capability evolution with light/full learning modes"
-  default_prompt: "Use $self-evolving-agent to choose a light or full learning loop, preserve legacy self-improving-agent logs, diagnose capability gaps, and promote only validated strategies."
+  short_description: "Phase-aware capability evolution with canonical records"
+  default_prompt: "Use $self-evolving-agent to classify the task into task_light, task_full, agenda_review, or promotion_review mode, retrieve only the required records, preserve legacy self-improving-agent logs as read-only evidence, and write new evidence through the evolution runtime."

@@ -1,0 +1,262 @@
+{
+  "generated_at": "2026-03-31T13:14:27Z",
+  "workspace_layout_version": 2,
+  "record_count": 11,
+  "active_agenda_ids": [
+    "AGD-BOOTSTRAP-001"
+  ],
+  "active_focus": [
+    "execution discipline",
+    "memory retrieval",
+    "verification"
+  ],
+  "records": [
+    {
+      "id": "CAP-BOOTSTRAP-001",
+      "type": "capability",
+      "title": "research",
+      "path": "records/capabilities/cap-bootstrap-001-research.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "research"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "ambiguous retrieval, unfamiliar domain, competing explanations",
+      "status": "active",
+      "state": "",
+      "capability": "research",
+      "level": "L3 reliable",
+      "confidence": "medium",
+      "summary": "Can gather and summarize relevant information when the search space is clear and the question is well framed."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-002",
+      "type": "capability",
+      "title": "planning",
+      "path": "records/capabilities/cap-bootstrap-002-planning.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "planning"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "multi-part work, unclear scope, hidden constraints",
+      "status": "active",
+      "state": "",
+      "capability": "planning",
+      "level": "L2 assisted",
+      "confidence": "medium",
+      "summary": "Can produce reasonable decomposition when prompted to slow down and make checkpoints explicit."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-003",
+      "type": "capability",
+      "title": "tool-use",
+      "path": "records/capabilities/cap-bootstrap-003-tool-use.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "tooling"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "unfamiliar tool, brittle interface, shell output needs inspection",
+      "status": "active",
+      "state": "",
+      "capability": "tool-use",
+      "level": "L3 reliable",
+      "confidence": "medium",
+      "summary": "Can select and use common tools effectively in routine development and analysis workflows."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-004",
+      "type": "capability",
+      "title": "verification",
+      "path": "records/capabilities/cap-bootstrap-004-verification.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "verification",
+        "focus"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "high-consequence change, plausible output, pre-delivery checks",
+      "status": "active",
+      "state": "",
+      "capability": "verification",
+      "level": "L2 assisted",
+      "confidence": "medium",
+      "summary": "Can verify effectively when a validation plan is explicit and test surfaces are obvious."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-005",
+      "type": "capability",
+      "title": "synthesis",
+      "path": "records/capabilities/cap-bootstrap-005-synthesis.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "synthesis"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "mixed evidence, uncertainty labeling, competing signals",
+      "status": "active",
+      "state": "",
+      "capability": "synthesis",
+      "level": "L3 reliable",
+      "confidence": "medium",
+      "summary": "Can combine multiple signals into coherent explanations, summaries, and action plans in familiar contexts."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-006",
+      "type": "capability",
+      "title": "communication",
+      "path": "records/capabilities/cap-bootstrap-006-communication.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "communication"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "tight output contract, audience shift, concise delivery",
+      "status": "active",
+      "state": "",
+      "capability": "communication",
+      "level": "L4 adaptive",
+      "confidence": "medium",
+      "summary": "Usually adapts tone, structure, and detail level well for different audiences and task types."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-007",
+      "type": "capability",
+      "title": "coding",
+      "path": "records/capabilities/cap-bootstrap-007-coding.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "coding"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "nontrivial implementation, regression surface, multi-file edit",
+      "status": "active",
+      "state": "",
+      "capability": "coding",
+      "level": "L3 reliable",
+      "confidence": "medium",
+      "summary": "Can implement and refactor routine changes safely when scope and constraints are clear."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-008",
+      "type": "capability",
+      "title": "execution discipline",
+      "path": "records/capabilities/cap-bootstrap-008-execution-discipline.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "discipline",
+        "focus"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "workflow collapse, skipped checkpoints, pressure shortcut",
+      "status": "active",
+      "state": "",
+      "capability": "execution discipline",
+      "level": "L2 assisted",
+      "confidence": "medium",
+      "summary": "Knows many correct workflows and can follow them when the need is salient."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-009",
+      "type": "capability",
+      "title": "memory retrieval",
+      "path": "records/capabilities/cap-bootstrap-009-memory-retrieval.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "retrieval",
+        "focus"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "missed prior lesson, near-neighbor task, retrieval too late",
+      "status": "active",
+      "state": "",
+      "capability": "memory retrieval",
+      "level": "L2 assisted",
+      "confidence": "low",
+      "summary": "Can use prior learnings when they are surfaced clearly or tied to obvious trigger phrases."
+    },
+    {
+      "id": "CAP-BOOTSTRAP-010",
+      "type": "capability",
+      "title": "long-horizon task handling",
+      "path": "records/capabilities/cap-bootstrap-010-long-horizon-task-handling.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "long-horizon"
+      ],
+      "linked_records": [
+        "AGD-BOOTSTRAP-001"
+      ],
+      "trigger_signature": "multi-step effort, context drift, strategic tracking",
+      "status": "active",
+      "state": "",
+      "capability": "long-horizon task handling",
+      "level": "L2 assisted",
+      "confidence": "low",
+      "summary": "Can maintain progress when checkpoints and subgoals are made explicit."
+    },
+    {
+      "id": "AGD-BOOTSTRAP-001",
+      "type": "agenda",
+      "title": "bootstrap-agenda",
+      "path": "records/agenda/agd-bootstrap-001-bootstrap-agenda.md",
+      "updated_at": "2026-03-18T00:00:00Z",
+      "created_at": "2026-03-18T00:00:00Z",
+      "tags": [
+        "bootstrap",
+        "agenda"
+      ],
+      "linked_records": [
+        "CAP-BOOTSTRAP-004",
+        "CAP-BOOTSTRAP-008",
+        "CAP-BOOTSTRAP-009"
+      ],
+      "trigger_signature": "after five meaningful cycles, structural gap, unfamiliar project",
+      "status": "active",
+      "state": "",
+      "capability": "",
+      "level": "",
+      "confidence": "",
+      "summary": "1. verification"
+    }
+  ]
+}

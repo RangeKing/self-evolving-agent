@@ -13,7 +13,7 @@
 
 🧠 self-improving-agent 只会记录错误。
 
-`self-evolving-agent` 是一个面向 OpenClaw 的 skill，它把被动式自我改进升级为完整的能力进化闭环：诊断能力缺口、设定学习优先级、生成训练单元、评估进步、验证迁移，最后才把真正有效的策略提升为长期行为。
+`self-evolving-agent` 是一个面向 OpenClaw 的 phase-aware capability-evolution runtime。它会把任务路由到 `task_light`、`task_full`、`agenda_review` 或 `promotion_review` 模式；只检索最相关的历史 records；把新证据写入 canonical records；再自动重建人类可读的 ledgers 和 `manifest.json`。
 
 它保留了 [`self-improving-agent`](https://github.com/peterskoett/self-improving-agent) 的优点，但把范式从下面三件事彻底升级了：
 
@@ -58,6 +58,8 @@
 
 - 🧭 **Learning agenda：** 同时只保留 1-3 个最高杠杆的训练重点
 - 🗺️ **Capability map：** 跟踪等级、证据、边界、失败模式与升级条件
+- 🧠 **Phase-aware control plane：** 先做模式路由，用最小安全模式处理任务，而不是默认每次都跑完整重流程
+- 🗂️ **Canonical records：** 可变状态存放在 `records/` 下，人类阅读用 ledger 由 records 自动生成
 - 🔬 **Diagnosis layer：** 把 incident 提升为能力层根因分析
 - 🏋️ **Curriculum layer：** 生成 drills、pass criteria 和 transfer scenarios
 - ✅ **Evaluation ladder：** 区分“写下来”和“真正学会了”
@@ -68,38 +70,30 @@
 
 ```mermaid
 flowchart TD
-    A["任务开始"] --> B["检索记忆"]
-    B --> C["任务前风险诊断"]
-    C --> D["选择执行策略"]
-    D --> E["执行任务"]
-    E --> F["任务后反思"]
-    F --> G["更新能力地图"]
-    G --> H["训练决策"]
-    H --> I["更新评估状态"]
-    I --> J["Promotion 决策"]
-
-    K["学习议程审查"] --> B
-    K --> G
-    H --> K
-    I --> K
+    A["任务开始"] --> B["classify-task"]
+    B --> C["模式: task_light | task_full | agenda_review | promotion_review"]
+    C --> D["retrieve-context"]
+    D --> E["带验证地执行"]
+    E --> F["record-incident"]
+    F --> G["rebuild-index"]
+    G --> H["生成 ledgers + manifest.json"]
+    H --> I["按触发条件执行 review-agenda / evaluate"]
 ```
 
-## 🔁 学习闭环
+运行时入口是 [`scripts/evolution_runtime.py`](./scripts/evolution_runtime.py)。它把 `assets/records/` 和工作区里的 `records/` 目录视为可变的 source of truth，并自动生成 summaries 与 `index/manifest.json`。
 
-每个有意义的 cycle 都运行以下流程：
+## 🔁 Phase-Aware Loop
 
-1. 分类任务（novelty / consequence / horizon）
-2. 检索相关 learnings 与 capabilities
-3. 执行任务前风险诊断
-4. 选择执行策略
-5. 执行任务
-6. 任务后反思
-7. 更新能力地图
-8. 生成或修订训练单元
-9. 评估学习进度
-10. 仅 promote 经过验证的策略
+每个有意义的 cycle 都遵循这个控制面：
 
-在任务闭环之外，还会在需要时运行 **learning agenda review**，动态调整训练优先级。
+1. 用 `scripts/evolution_runtime.py classify-task` 分类任务
+2. 选择最小但足够安全的模式
+3. 用 `retrieve-context` 只拉取该模式需要的 records
+4. 按该模式要求带验证地执行
+5. 用 `record-incident` 写入可复用证据
+6. 用 `rebuild-index` 重建 `records/` 视图和 `manifest.json`
+
+任务闭环之外，只在触发条件满足时运行 `review-agenda` 和 `evaluate`。
 
 ## 🧩 它保留了 self-improving-agent 的什么
 
@@ -149,13 +143,17 @@ openclaw hooks enable self-evolving-agent
 
 那么这个 skill 就是为这种目标设计的。
 
-## ⚖️ 轻流程 vs 重流程
+## ⚖️ 模式说明
 
-完整能力进化闭环不应该为了每一个小失误都全量启动。
+`task_full` 不应该为了每一个小失误都全量启动。
 
-当任务是熟悉的、低后果、短链路，而且没有暴露更深层能力短板时，优先走轻流程：只检索最相关的少量记忆，提前说清一个风险点和一个验证动作，完成任务后只记录那些明显可复用的经验。
+当任务熟悉、低后果、短链路时，优先使用 `task_light`：只检索少量最相关 records，提前说清一个风险点和一个验证动作，不要顺手展开 agenda 或 promotion 工作。
 
-只有在任务陌生、后果较高、命中当前 agenda 重点、出现重复模式、用户不得不 rescue、迁移失败，或者这条经验已经值得进入 training / evaluation / promotion 时，才升级为完整重流程。
+当任务陌生、后果较高、命中当前 agenda 重点、出现重复模式、用户不得不 rescue，或者这条经验已经值得进入 training / evaluation 时，才升级为 `task_full`。
+
+只有在“5 个 meaningful cycles 后”“结构性缺口出现”“transfer 失败”“即将开始新的陌生项目”等场景下，才进入 `agenda_review`。
+
+只有在做 transfer / promotion 判断时，才进入 `promotion_review`。
 
 ## 📁 仓库结构
 
@@ -182,6 +180,9 @@ self-evolving-agent/
 │   ├── promotion.md
 │   └── reflection.md
 ├── assets/
+│   ├── records/
+│   │   ├── agenda/
+│   │   └── capabilities/
 │   ├── CAPABILITIES.md
 │   ├── ERRORS.md
 │   ├── EVALUATIONS.md
@@ -204,6 +205,7 @@ self-evolving-agent/
 └── scripts/
     ├── activator.sh
     ├── bootstrap-workspace.sh
+    ├── evolution_runtime.py
     ├── error-detector.sh
     ├── run-benchmark.py
     └── run-evals.py
@@ -213,13 +215,16 @@ self-evolving-agent/
 
 1. 把 skill 安装到 OpenClaw skills 目录
 2. 初始化持久化 `.evolution` 工作区
-3. 复杂任务前先看 learning agenda
-4. 让任务闭环自动更新 memory、diagnosis、training、evaluation
+3. 先通过 runtime 分类任务，并只检索所需 records
+4. 通过 runtime 在 canonical record 更新后自动重建 ledgers 与 `manifest.json`
 5. 跑 benchmark 看这个 skill 在真实模型执行下的表现
 
 ```bash
 cp -r self-evolving-agent ~/.openclaw/skills/self-evo-agent
 ~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
+python3 ~/.openclaw/skills/self-evo-agent/scripts/evolution_runtime.py classify-task \
+  --workspace ~/.openclaw/workspace/.evolution \
+  --prompt "I need to modify a production deployment workflow I have never touched before."
 python3 ~/.openclaw/skills/self-evo-agent/scripts/run-evals.py ~/.openclaw/skills/self-evo-agent
 python3 ~/.openclaw/skills/self-evo-agent/scripts/run-benchmark.py --skill-dir ~/.openclaw/skills/self-evo-agent
 ```

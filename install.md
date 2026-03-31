@@ -51,7 +51,7 @@ Create a persistent workspace memory area:
 mkdir -p ~/.openclaw/workspace/.evolution
 ```
 
-Seed the workspace ledgers with the bootstrap script:
+Seed the canonical records and generated ledgers with the bootstrap script:
 
 ```bash
 ~/.openclaw/skills/self-evo-agent/scripts/bootstrap-workspace.sh ~/.openclaw/workspace/.evolution
@@ -72,6 +72,35 @@ This migration is lossless:
 - it avoids rewriting old entries into the new schema before they are needed
 
 After import, verify `.evolution/legacy-self-improving/IMPORT_INDEX.md`.
+
+## Canonical Records
+
+Canonical records are the mutable source of truth. The generated ledgers and `manifest.json` are rebuilt from them.
+
+The mutable source of truth now lives under `.evolution/records/`:
+
+```text
+.evolution/
+├── records/
+│   ├── learnings/
+│   ├── errors/
+│   ├── feature_requests/
+│   ├── capabilities/
+│   ├── training_units/
+│   ├── evaluations/
+│   └── agenda/
+├── index/
+│   └── manifest.json
+├── LEARNINGS.md
+├── ERRORS.md
+├── FEATURE_REQUESTS.md
+├── CAPABILITIES.md
+├── LEARNING_AGENDA.md
+├── TRAINING_UNITS.md
+└── EVALUATIONS.md
+```
+
+Use `scripts/evolution_runtime.py rebuild-index --workspace ~/.openclaw/workspace/.evolution` to regenerate the manifest and the human-readable ledgers from canonical records.
 
 ## Recommended Workspace Convention
 
@@ -131,31 +160,29 @@ Only promote validated strategies into durable context:
 
 ## Minimum Operating Routine
 
-Default to the light loop. Only pay the cost of the full loop when the task or evidence warrants it.
+Default to the smallest safe mode. Only pay the cost of `task_full`, `agenda_review`, or `promotion_review` when the task or evidence warrants it.
 
 Before major tasks:
 
-1. Review `LEARNING_AGENDA` to see what the agent is actively training.
-2. Review relevant entries from `LEARNINGS`, `ERRORS`, and `CAPABILITIES`.
+1. Run `scripts/evolution_runtime.py classify-task`.
+2. Run `scripts/evolution_runtime.py retrieve-context` for the chosen mode.
 3. Identify the most likely failure mode.
 4. Choose an execution strategy that reduces that risk.
 
 After major tasks:
 
-1. Log incidents and learnings.
-2. Diagnose the weakest capability involved.
-3. Refresh the learning agenda if priorities changed.
-4. Create or update a training unit if recurrence appears.
-5. Record evaluation status.
-6. Promote only after validated transfer.
+1. Write incidents or reflections through `scripts/evolution_runtime.py record-incident`.
+2. Rebuild summaries through `scripts/evolution_runtime.py rebuild-index`.
+3. Refresh the learning agenda only if its trigger fired.
+4. Run `evaluate` only if state advancement or promotion is in question.
 
-For familiar, low-consequence, short tasks, use the light loop instead:
+For familiar, low-consequence, short tasks, stay in `task_light` mode:
 
 1. Retrieve only the 1-3 most relevant prior items.
 2. Name one likely risk and one verification check.
 3. Do the work.
 4. Log only if the lesson is unusually reusable.
-5. Escalate into the full loop only if a real defect, user rescue, recurrence, or transfer-worthy lesson appears.
+5. Escalate into `task_full` only if a real defect, user rescue, recurrence, or transfer-worthy lesson appears.
 
 ## Validation
 

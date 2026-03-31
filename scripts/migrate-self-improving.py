@@ -14,6 +14,7 @@ import argparse
 import hashlib
 import re
 import shutil
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -152,6 +153,17 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 def main(argv: list[str]) -> int:
     args = parse_args(argv)
     target_dir = Path(args.target_dir).expanduser().resolve()
+    for rel in (
+        "records/learnings",
+        "records/errors",
+        "records/feature_requests",
+        "records/capabilities",
+        "records/training_units",
+        "records/evaluations",
+        "records/agenda",
+        "index",
+    ):
+        (target_dir / rel).mkdir(parents=True, exist_ok=True)
     legacy_root = target_dir / "legacy-self-improving"
     legacy_root.mkdir(parents=True, exist_ok=True)
 
@@ -188,6 +200,15 @@ def main(argv: list[str]) -> int:
     if any_copied:
         print()
         print("Migration complete. Originals were left untouched.")
+
+    runtime = Path(__file__).with_name("evolution_runtime.py")
+    if runtime.exists():
+        subprocess.run(
+            [sys.executable, str(runtime), "rebuild-index", "--workspace", str(target_dir)],
+            check=True,
+            capture_output=True,
+            text=True,
+        )
 
     return 0
 

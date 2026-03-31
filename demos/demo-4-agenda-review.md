@@ -40,7 +40,7 @@ Planning still matters, but the evidence suggests planning quality degrades main
 2. execution discipline
    - Why now: known workflows still collapse under momentum.
    - Current evidence: the agent can name the right loop but sometimes skips it in practice.
-   - Exit criteria: three complex tasks completed with full-loop adherence.
+   - Exit criteria: three complex tasks completed with `task_full` adherence.
    - Linked unit: TRN-20260318-003
 
 3. memory retrieval

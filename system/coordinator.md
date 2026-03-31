@@ -1,336 +1,189 @@
 # Self-Evolving Coordinator
 
-This file defines the primary operating system for the skill.
+This file defines the phase-aware operating system for the skill.
 
 ## Mission
 
-Transform passive correction into active capability evolution.
+Transform passive correction into selective, mode-aware capability evolution.
 
-The system must preserve memory logging, but memory is not the endpoint. The endpoint is a more capable agent with measurable progress and transferable strategies.
+The coordinator should behave like a small control plane:
+
+- classify the work
+- load only the necessary context
+- execute with a mode-appropriate verification plan
+- write evidence into canonical records
+- regenerate summaries and the manifest
 
 ## First Principles
 
 1. Logging is evidence collection, not mastery.
-2. Repeated incidents are usually symptoms of capability weakness.
-3. Promotion without transfer testing creates brittle rules.
-4. The goal is not only fewer mistakes, but stronger independence on unfamiliar work.
-5. Learning should be framed in capability terms, not only incident terms.
+2. `task_full` is expensive; do not run it by default.
+3. Generated ledgers are views. Canonical records are the mutable source of truth.
+4. Promotion without transfer evidence creates brittle policy.
+5. Agenda review and promotion review are special modes, not ambient behaviors.
 
-## Operating Stack
+## Canonical Workspace
 
-### Layer 0: Learning Agenda
+Mutable records live in `.evolution/records/`:
 
-Maintain a small active agenda so the system can choose what to train next instead of reacting incident by incident.
+- `learnings/`
+- `errors/`
+- `feature_requests/`
+- `capabilities/`
+- `training_units/`
+- `evaluations/`
+- `agenda/`
 
-Primary module:
+Generated outputs live at the workspace root and under `index/`:
 
-- `modules/learning-agenda.md`
+- `index/manifest.json`
+- `LEARNINGS.md`
+- `ERRORS.md`
+- `FEATURE_REQUESTS.md`
+- `CAPABILITIES.md`
+- `TRAINING_UNITS.md`
+- `EVALUATIONS.md`
+- `LEARNING_AGENDA.md`
 
-Primary file:
+## Runtime Commands
 
-- `assets/LEARNING_AGENDA.md`
+Use `scripts/evolution_runtime.py` as the control plane:
 
-### Layer 1: Memory
+- `classify-task`
+- `retrieve-context`
+- `record-incident`
+- `review-agenda`
+- `evaluate`
+- `rebuild-index`
 
-Capture:
+## Mode Contract
 
-- errors
-- corrections
-- learnings
-- feature requests
-- recurring patterns
+### `task_light`
 
-Primary files:
+Entry trigger:
+- familiar task
+- low consequence
+- short horizon
+- no active structural weakness is central
 
-- `assets/LEARNINGS.md`
-- `assets/ERRORS.md`
-- `assets/FEATURE_REQUESTS.md`
+Required retrieval:
+- up to 3 records from learnings, errors, and capabilities
 
-### Layer 2: Diagnosis
+Required artifact:
+- one risk
+- one verification check
+- a minimal execution strategy
 
-Diagnose:
+Escalation rule:
+- escalate to `task_full` if execution reveals a real defect, recurrence, user rescue, or hidden consequence
 
-- Which capabilities the task required
-- Which capability failed or nearly failed
-- Whether the issue is incidental or systemic
-- What root cause best explains the outcome
+Exit condition:
+- task completes without reusable new evidence, or only a small reusable lesson needs to be recorded
 
-Primary module:
+### `task_full`
 
-- `modules/diagnose.md`
+Entry trigger:
+- unfamiliar or mixed task
+- medium/high consequence
+- medium/long horizon
+- recurrence or structural uncertainty
 
-### Layer 3: Training
+Required retrieval:
+- active agenda
+- relevant learnings and errors
+- relevant capabilities
+- linked training units and evaluations when present
 
-For recurring or high-leverage weaknesses, create targeted training units.
+Required artifact:
+- pre-task diagnosis
+- capability risk assessment
+- verification-first execution strategy
 
-Primary module:
+Escalation rule:
+- if the task turns into agenda reprioritization, switch to `agenda_review`
+- if the task becomes a transfer or promotion judgment, switch to `promotion_review`
 
-- `modules/curriculum.md`
+Exit condition:
+- the task is complete and any reusable evidence has been written as canonical records
 
-Primary file:
+### `agenda_review`
 
-- `assets/TRAINING_UNITS.md`
+Entry trigger:
+- after five meaningful cycles
+- structural gap detected
+- failed transfer
+- before a new unfamiliar project
 
-### Layer 4: Evaluation and Policy
+Required retrieval:
+- active agenda
+- weak capabilities
+- open training units
+- evaluations and recent structural errors
 
-Track whether the learning has been:
+Required artifact:
+- next 1-3 active focus capabilities
+- rationale
+- exit criteria
 
-- recorded
-- understood
-- practiced
-- passed
-- generalized
-- promoted
+Escalation rule:
+- do not drift into general task execution; return to `task_light` or `task_full` after the agenda decision is made
 
-Primary modules:
+Exit condition:
+- a bounded agenda decision exists with a small active focus set
 
-- `modules/evaluator.md`
-- `modules/promotion.md`
+### `promotion_review`
 
-Primary files:
+Entry trigger:
+- explicit evaluation request
+- transfer evidence appears
+- promotion is under consideration
 
-- `assets/EVALUATIONS.md`
-- `assets/CAPABILITIES.md`
+Required retrieval:
+- evaluation records
+- linked learnings
+- linked training units
+- relevant capability records
 
-## Control Loop
+Required artifact:
+- ladder state
+- promotion readiness
+- smallest durable rule, if promotion is justified
 
-The 10-step task loop remains the core execution cycle.
+Escalation rule:
+- if transfer evidence is weak, fall back to evaluation only and keep the rule unpromoted
 
-Outside that loop, run a learning agenda review whenever a trigger fires. Agenda review decides which 1-3 capabilities deserve deliberate practice now and which should be deferred.
+Exit condition:
+- promotion decision is explicit and scoped
 
-If the agenda changes, update:
+## Retrieval Policy
 
-- `assets/LEARNING_AGENDA.md`
-- `assets/CAPABILITIES.md`
-- `assets/TRAINING_UNITS.md`
+Retrieval must be selective.
 
-## Effort Selection
+Ranking should prefer:
 
-Default to the light loop. Spend full-loop tokens only when the task or evidence deserves it.
+1. trigger-signature overlap
+2. capability match
+3. active or open state
+4. recency
+5. overlap with active agenda links
 
-### Light loop
+Do not scan entire ledgers manually when the runtime can rank records from the manifest.
 
-Use the light loop when all are true:
+## Evidence Policy
 
-- novelty is `familiar`
-- consequence is `low`
-- horizon is `short`
-- no active learning agenda item is central
-- no failure, near-miss, or user rescue suggests a reusable weakness
-- no training, evaluation, or promotion decision is needed
+When meaningful evidence appears:
 
-Light-loop output:
+1. write it through `record-incident`
+2. regenerate the manifest and ledgers through `rebuild-index`
+3. update agenda or evaluation only if the trigger is satisfied
 
-1. a short retrieval pass
-2. one risk and one verification check
-3. optional `log_only` update if the lesson is reusable
-
-### Full loop
-
-Run the full 10-step loop when any are true:
-
-- novelty is `mixed` or `unfamiliar`
-- consequence is `medium` or `high` and failure would matter
-- horizon is `medium` or `long`
-- an active agenda item is relevant
-- a pattern looks recurring, structural, or transfer-related
-- the task is deliberate practice, evaluation, or promotion work
-
-### Escalate mid-task
-
-Escalate from light to full if execution reveals:
-
-- non-trivial rework
-- a real defect caught by verification
-- user rescue or user redirection
-- a missed retrieval
-- evidence that the lesson may deserve training or promotion
+Minor incidents can remain local. Reusable incidents should become canonical records.
 
 ## Migration Layer
 
-If `.evolution/legacy-self-improving/` exists, treat it as a read-only legacy memory layer during retrieval.
+If `.evolution/legacy-self-improving/` exists:
 
-Use it to preserve past experience without forcing an immediate schema rewrite.
-Only normalize a legacy item into the new ledgers when it becomes active evidence for diagnosis, agenda review, evaluation, or promotion.
-
-## Standard Workflow
-
-### Step 1: Classify task
-
-Classify the task on three axes:
-
-- novelty: familiar | mixed | unfamiliar
-- consequence: low | medium | high
-- horizon: short | medium | long
-
-If the task is `mixed` or `unfamiliar`, or has `high` consequence, force a pre-task diagnosis.
-If the task stays in light mode, keep the diagnosis to one risk, one mitigation, and one verification check.
-
-### Step 2: Retrieve relevant memory
-
-Retrieve:
-
-- related learning entries
-- related errors
-- matching capabilities
-- active learning agenda items
-- open training units
-- legacy self-improving logs when the migration layer exists
-
-Ask:
-
-- Have I failed in a similar way before?
-- Is there an existing strategy that should be re-used?
-- Is this task an opportunity to practice an active focus capability?
-- Is there an open training unit relevant to this task?
-
-### Step 3: Pre-task risk diagnosis
-
-Identify:
-
-- required capabilities
-- likely weak points
-- verification risks
-- tool-use risks
-- decomposition risks
-
-Output:
-
-- top capability risks
-- mitigation plan
-- verification plan
-
-### Step 4: Choose execution strategy
-
-Examples:
-
-- slower but verified
-- tool-assisted and checkpointed
-- decompose-first
-- retrieve-then-act
-- draft-then-critique
-
-### Step 5: Perform task
-
-While executing:
-
-- note unexpected friction
-- note any near-miss that almost caused failure
-- note whether prior learnings actually helped
-
-### Step 6: Post-task reflection
-
-Run the protocol in `modules/reflection.md`.
-
-Mandatory questions:
-
-- What capability did this task really test?
-- What was the weakest link?
-- What evidence supports that diagnosis?
-- What should be trained next?
-
-### Step 7: Update capability map
-
-Use `modules/capability-map.md` to update:
-
-- current level
-- assessment status
-- evidence
-- failure modes
-- next focus
-- upgrade condition
-
-### Step 8: Create or revise training unit
-
-Create a training unit if any condition is true:
-
-- same weakness repeated twice
-- weakness blocked a high-value task
-- strategy was understood but not executable under pressure
-- the agent compensated through luck or user rescue
-
-Do not create a training unit for a one-off low-consequence slip that stayed incidental after verification.
-
-If the new unit changes what should be trained now, follow the protocol in `modules/learning-agenda.md`.
-
-### Step 9: Evaluate progress
-
-Use `modules/evaluator.md`.
-
-Do not skip state transitions. Explicitly mark what changed and why.
-
-### Step 10: Promote only validated strategy
-
-Promotion requires:
-
-- clear trigger signature
-- at least one passed training unit
-- at least one successful transfer case
-- evidence of durable reuse value
-
-## Capability-Oriented Taxonomy
-
-Default capability families:
-
-- research
-- planning
-- tool-use
-- verification
-- synthesis
-- communication
-- coding
-- execution discipline
-- memory retrieval
-- long-horizon task handling
-
-Use these unless a project-specific extension is justified.
-
-## Root Cause Taxonomy
-
-Diagnose failures using one or more of:
-
-- `knowledge_gap`
-- `decomposition_weakness`
-- `verification_weakness`
-- `tool_use_weakness`
-- `communication_weakness`
-- `memory_retrieval_weakness`
-- `execution_discipline_weakness`
-- `transfer_weakness`
-
-## Evidence Standard
-
-Prefer concrete evidence over subjective impressions:
-
-- direct error output
-- user correction
-- missed requirement
-- rework needed
-- successful re-use in a new context
-- successful completion under reduced support
-
-## Anti-Patterns
-
-Do not:
-
-- mark something learned just because it was written down
-- promote a rule that only worked once in one narrow context
-- confuse user rescue with capability gain
-- flood long-term memory with fragile local hacks
-- create training units with vague pass criteria
-
-## Minimal Execution Output
-
-For each meaningful cycle, produce:
-
-1. `Agenda Decision` (when a review trigger fired)
-2. `Task Diagnosis`
-3. `Capability Update`
-4. `Training Decision`
-5. `Evaluation State`
-6. `Promotion Decision`
-
-For a light-loop cycle with no escalation, it is acceptable to produce only:
-
-1. `Task Diagnosis`
-2. `log_only` or `no durable update`
+- treat it as read-only
+- consult it during retrieval when relevant
+- do not bulk-convert it into canonical records
+- normalize only the specific legacy items that become active evidence

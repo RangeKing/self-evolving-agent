@@ -33,11 +33,12 @@ if [ "$contains_error" = true ]; then
   cat << 'EOF'
 <self-evolving-agent-error>
 An execution failure was detected.
-Do not only log the incident.
+Do not only patch the symptom.
 Also ask:
 - which capability failed or was weak?
-- is this a recurring pattern?
-- does this require a training unit or evaluation update?
+- should the task escalate from task_light mode to task_full mode?
+- should this be recorded through `scripts/evolution_runtime.py record-incident`?
+- does this require a training unit, agenda review, or evaluation update?
 </self-evolving-agent-error>
 EOF
 fi

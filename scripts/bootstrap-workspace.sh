@@ -7,6 +7,7 @@ FORCE=false
 MIGRATE_FROM=""
 ASSET_DIR="$(cd "$(dirname "$0")/../assets" && pwd)"
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+RUNTIME="$SCRIPT_DIR/evolution_runtime.py"
 
 usage() {
   cat <<'EOF'
@@ -52,28 +53,41 @@ while [[ $# -gt 0 ]]; do
 done
 
 mkdir -p "$TARGET_DIR"
+mkdir -p \
+  "$TARGET_DIR/records/learnings" \
+  "$TARGET_DIR/records/errors" \
+  "$TARGET_DIR/records/feature_requests" \
+  "$TARGET_DIR/records/capabilities" \
+  "$TARGET_DIR/records/training_units" \
+  "$TARGET_DIR/records/evaluations" \
+  "$TARGET_DIR/records/agenda" \
+  "$TARGET_DIR/index"
 
-copy_file() {
-  local name="$1"
-  local src="$ASSET_DIR/$name"
-  local dest="$TARGET_DIR/$name"
+copy_seed_records() {
+  local source_root="$ASSET_DIR/records"
+  local target_root="$TARGET_DIR/records"
 
-  if [[ -f "$dest" && "$FORCE" != true ]]; then
-    echo "keep  $dest"
-    return
+  if [[ ! -d "$source_root" ]]; then
+    echo "Seed record directory not found: $source_root" >&2
+    exit 1
   fi
 
-  cp "$src" "$dest"
-  echo "write $dest"
+  while IFS= read -r source_file; do
+    local rel="${source_file#$source_root/}"
+    local dest="$target_root/$rel"
+    mkdir -p "$(dirname "$dest")"
+
+    if [[ -f "$dest" && "$FORCE" != true ]]; then
+      echo "keep  $dest"
+      continue
+    fi
+
+    cp "$source_file" "$dest"
+    echo "write $dest"
+  done < <(find "$source_root" -type f ! -name '.DS_Store' | sort)
 }
 
-copy_file "LEARNINGS.md"
-copy_file "ERRORS.md"
-copy_file "FEATURE_REQUESTS.md"
-copy_file "CAPABILITIES.md"
-copy_file "LEARNING_AGENDA.md"
-copy_file "TRAINING_UNITS.md"
-copy_file "EVALUATIONS.md"
+copy_seed_records
 
 if [[ -n "$MIGRATE_FROM" ]]; then
   echo
@@ -88,8 +102,12 @@ elif [[ -d "$DEFAULT_LEGACY_DIR" ]]; then
   echo "Re-run with --migrate-from $DEFAULT_LEGACY_DIR to import them into $TARGET_DIR/legacy-self-improving."
 fi
 
+python3 "$RUNTIME" rebuild-index --workspace "$TARGET_DIR" >/dev/null
+
 echo
 echo "Workspace bootstrap complete."
 echo "Target: $TARGET_DIR"
-echo "Use --force to overwrite existing ledgers."
+echo "Canonical records: $TARGET_DIR/records"
+echo "Manifest: $TARGET_DIR/index/manifest.json"
+echo "Use --force to overwrite existing seed records before rebuilding."
 echo "Use --migrate-from <legacy-.learnings-dir> to import self-improving-agent history."
